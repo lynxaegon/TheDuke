@@ -24,5 +24,5 @@ module.exports.loop = function() {
     // Run Stats
     // Stats.run();
 
-    Logger.info("--===---------- Loop Ended (used cpu: " + Game.cpu.getUsed() + ")----------===--");
+    Logger.info("--===---------- Loop Ended (used cpu: " + Game.cpu.getUsed() + "/" + Game.cpu.limit + " (" + Game.cpu.tickLimit + "))----------===--");
 }
