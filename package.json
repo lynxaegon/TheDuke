@@ -18,8 +18,10 @@
   "homepage": "https://github.com/lynxaegon/TheDuke#readme",
   "dependencies": {},
   "devDependencies": {
-    "grunt-screeps": "^1.4.0",
     "grunt": "^1.0.3",
-    "grunt-contrib-copy": "^1.0.0"
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-file-append": "0.0.7",
+    "grunt-screeps": "^1.4.0"
   }
 }
