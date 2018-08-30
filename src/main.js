@@ -1,5 +1,11 @@
+/* Servers:
+official - None yet
+server1.screepspl.us - overmind test
+screeps.space - The Duke (testing phase)
+*/
+
 global._ = require('lodash');
-global.Logger = require('utils_logger');
+global.Logger = require('utils.logger');
 require('version');
 
 if (!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
@@ -9,15 +15,15 @@ if (!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
 
 // requirements
 // const factory = require('creeps_factory');
-const _TheDuke = require('TheDuke');
 // factory.init();
+const _TheDuke = require('TheDuke');
 
 module.exports.loop = function() {
     Logger.info("--===---------- Loop " + Game.time + " Started ----------===--");
 
     // init The Duke from memory obj
     global.TheDuke = new _TheDuke();
-    TheDuke.loadFrom(Memory);
+    TheDuke.loadFrom(Memory.state);
 
     TheDuke.handler();
 
@@ -26,3 +32,12 @@ module.exports.loop = function() {
 
     Logger.info("--===---------- Loop Ended (used cpu: " + Game.cpu.getUsed() + "/" + Game.cpu.limit + " (" + Game.cpu.tickLimit + "))----------===--");
 }
+
+
+/*
+function bodyCost (body) {
+    return body.reduce(function (cost, part) {
+        return cost + BODYPART_COST[part];
+    }, 0);
+}
+*/

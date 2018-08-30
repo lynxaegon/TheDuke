@@ -3,3 +3,4 @@ ScreepsAutocomplete/
 node_modules/
 credentials.json
 dist/
+.swp

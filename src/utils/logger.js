@@ -3,7 +3,7 @@ class Logger {
         console.log.apply(console.log, arguments);
     }
 
-    err() {
+    error() {
         var log = console.error;
         if (!log)
             log = console.log;

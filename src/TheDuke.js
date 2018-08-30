@@ -1,3 +1,7 @@
+var CreepFactory = require("creeps.factory");
+global.Creep_Wanderer = require("creeps.roles.wanderer");
+global.Creep_Harvester = require("creeps.roles.harvester");
+
 class TheDuke {
     // Try to load the AI from Memory
     loadFrom(obj) {
@@ -31,11 +35,38 @@ class TheDuke {
     }
 
     initPhase() {
-        Logger.info("Hello from The Duke!");
+        // for (var name in Game.rooms) {
+        //     Logger.info("Rooms", name);
+        // }
+        new CreepFactory();
+
+        this.creeps = {};
+
+        for (var name in Game.creeps) {
+            switch (Game.creeps[name].memory.role) {
+                case Creep_Wanderer.role:
+                    if (!this.creeps[Creep_Wanderer.role])
+                        this.creeps[Creep_Wanderer.role] = [];
+
+                    this.creeps[Creep_Wanderer.role].push(new Creep_Wanderer(Game.creeps[name]));
+                    break;
+                case Creep_Harvester.role:
+                    if (!this.creeps[Creep_Harvester.role])
+                        this.creeps[Creep_Harvester.role] = [];
+
+                    this.creeps[Creep_Harvester.role].push(new Creep_Harvester(Game.creeps[name]));
+                    break;
+            }
+        }
     }
 
     runPhase() {
-
+        for (var i in this.creeps) {
+            for (var j in this.creeps[i]) {
+                this.creeps[i][j].execute();
+                this.creeps[i][j].cleanup();
+            }
+        }
     }
 
     visualsPhase() {

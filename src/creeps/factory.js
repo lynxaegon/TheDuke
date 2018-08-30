@@ -1,6 +1,15 @@
-module.exports = {
-    init: function(creep, options) {
-        this.creep = creep;
-        this.options = options;
+const nanoid = require("utils.nanoid");
+
+class Factory {
+    constructor() {
+        Logger.info("Factory", Game.creeps.length);
+        if (Object.keys(Game.creeps).length < 5) {
+            Game.spawns.Spawn1.spawnCreep([MOVE, CARRY, WORK], nanoid(), {
+                memory: {
+                    role: Creep_Harvester.role
+                }
+            });
+        }
     }
-};
+}
+module.exports = Factory;
