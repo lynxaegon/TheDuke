@@ -3,11 +3,6 @@ global.Creep_Wanderer = require("creeps.roles.wanderer");
 global.Creep_Harvester = require("creeps.roles.harvester");
 
 class TheDuke {
-    // Try to load the AI from Memory
-    loadFrom(obj) {
-
-    }
-
     handler() {
         if (Game.cpu.bucket < 500) {
             Logger.warning("CPU bucket is critically low (" + Game.cpu.bucket + ") - suspending for 5 ticks!");

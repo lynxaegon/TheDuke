@@ -23,7 +23,6 @@ module.exports.loop = function() {
 
     // init The Duke from memory obj
     global.TheDuke = new _TheDuke();
-    TheDuke.loadFrom(Memory.state);
 
     TheDuke.handler();
 

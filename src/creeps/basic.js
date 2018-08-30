@@ -32,11 +32,12 @@ class BasicCreep {
                 this.creep.say("Moving to " + this.creep.memory.stateParams.nextRoom);
                 break;
             case "harvest":
+              this.creep.say("before harvest");
                 target = Game.getObjectById(this.creep.memory.stateParams.target);
                 if (target) {
                     this.creep.say("Harvesting...");
                     if (this.creep.harvest(target) == ERR_NOT_IN_RANGE) {
-                        this.forceState(move, {
+                        this.forceState("move", {
                             target: this.creep.memory.stateParams.target
                         }).execute();
                     }
@@ -46,7 +47,7 @@ class BasicCreep {
                 target = Game.getObjectById(this.creep.memory.stateParams.target);
                 this.creep.say("Transfering...");
                 if (this.creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    this.forceState(move, {
+                    this.forceState("move", {
                         target: this.creep.memory.stateParams.target
                     }).execute();
                 }
@@ -57,13 +58,16 @@ class BasicCreep {
     }
 
     cleanup() {
+      Logger.info("cleanup")
         var target;
         switch (this.creep.memory.state) {
             case "move":
                 if (this._isMoveByTarget()) {
+
                     target = Game.getObjectById(this.creep.memory.stateParams.target);
-                    var distance = Math.sqrt((this.creep.pos.x - target.pos.x) + (this.creep.pos.y - target.pos.y));
-                    if (distance == 0) {
+                    var distance = Math.floor(Math.sqrt(Math.abs((this.creep.pos.x - target.pos.x) + (this.creep.pos.y - target.pos.y))));
+                    Logger.info("Disatance:", distance, (this.creep.pos.x - target.pos.x) + (this.creep.pos.y - target.pos.y) );
+                    if (distance <= 1) {
                         this.creep.say("arrived via target");
                         this.finishState();
                     }
@@ -98,6 +102,7 @@ class BasicCreep {
     }
 
     forceState(state, params) {
+        Logger.info("forced state", state);
         this.creep.memory.pipeline.states.unshift(state);
         this.creep.memory.pipeline.params.unshift(params);
         return this;
@@ -114,12 +119,14 @@ class BasicCreep {
     }
 
     finishState() {
+        Logger.info("Finishing state", this.creep.memory.state);
         if (this.creep.memory.pipeline.states.length > 0) {
-            this.creep.memory.pipeline.states.unshift();
-            this.creep.memory.pipeline.params.unshift();
+            Logger.info("Removing pipeline", this.creep.memory.state);
+            this.creep.memory.pipeline.states.shift();
+            this.creep.memory.pipeline.params.shift();
         }
         delete this.creep.memory.state;
-        delete this.creep.memory.params;
+        delete this.creep.memory.stateParams;
     }
 
     _isMoveByTarget() {
