@@ -81,7 +81,7 @@ class BasicCreep {
                 }
                 break;
             case "harvest":
-                if (this.creep.carry.energy < this.creep.carryCapacity) {
+                if (this.creep.carry.energy == this.creep.carryCapacity) {
                     this.creep.say("Harvest compeleted");
                     this.finishState();
                 }
@@ -115,8 +115,8 @@ class BasicCreep {
 
     finishState() {
         if (this.creep.memory.pipeline.states.length > 0) {
-            this.creep.memory.pipeline.states.pop();
-            this.creep.memory.pipeline.params.pop();
+            this.creep.memory.pipeline.states.unshift();
+            this.creep.memory.pipeline.params.unshift();
         }
         delete this.creep.memory.state;
         delete this.creep.memory.params;
