@@ -1,11 +1,12 @@
 var CreepFactory = require("creeps.factory");
 global.Creep_Wanderer = require("creeps.roles.wanderer");
 global.Creep_Harvester = require("creeps.roles.harvester");
+global.Creep_Upgrader = require("creeps.roles.upgrader");
 
 class TheDuke {
     handler() {
-        if (Game.cpu.bucket < 500) {
-            Logger.warning("CPU bucket is critically low (" + Game.cpu.bucket + ") - suspending for 5 ticks!");
+        if (!Memory.suspend && Game.cpu.bucket < 500) {
+            Logger.warn("CPU bucket is critically low (" + Game.cpu.bucket + ") - suspending for 5 ticks!");
             Memory.suspend = 4;
             return;
         } else {
@@ -33,17 +34,25 @@ class TheDuke {
         // for (var name in Game.rooms) {
         //     Logger.info("Rooms", name);
         // }
-        new CreepFactory();
-
         this.creeps = {};
 
         for (var name in Game.creeps) {
+            if (Game.creeps[name].spawning) {
+                continue;
+            }
+
             switch (Game.creeps[name].memory.role) {
                 case Creep_Wanderer.role:
                     if (!this.creeps[Creep_Wanderer.role])
                         this.creeps[Creep_Wanderer.role] = [];
 
                     this.creeps[Creep_Wanderer.role].push(new Creep_Wanderer(Game.creeps[name]));
+                    break;
+                case Creep_Upgrader.role:
+                    if (!this.creeps[Creep_Upgrader.role])
+                        this.creeps[Creep_Upgrader.role] = [];
+
+                    this.creeps[Creep_Upgrader.role].push(new Creep_Upgrader(Game.creeps[name]));
                     break;
                 case Creep_Harvester.role:
                     if (!this.creeps[Creep_Harvester.role])
@@ -53,6 +62,9 @@ class TheDuke {
                     break;
             }
         }
+
+        new CreepFactory(this.creeps);
+
     }
 
     runPhase() {

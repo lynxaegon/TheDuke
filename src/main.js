@@ -6,6 +6,7 @@ screeps.space - The Duke (testing phase)
 
 global._ = require('lodash');
 global.Logger = require('utils.logger');
+global.Mem = require('utils.memory');
 require('version');
 
 if (!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
@@ -20,6 +21,9 @@ const _TheDuke = require('TheDuke');
 
 module.exports.loop = function() {
     Logger.info("--===---------- Loop " + Game.time + " Started ----------===--");
+
+    Mem.gc();
+    Mem.format();
 
     // init The Duke from memory obj
     global.TheDuke = new _TheDuke();

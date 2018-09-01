@@ -1,7 +1,7 @@
 const BasicCreep = require("creeps.basic");
 class Wanderer extends BasicCreep {
     static get role() {
-        return "wanderer"
+        return "wanderer";
     }
 
     constructor() {
@@ -27,22 +27,17 @@ class Wanderer extends BasicCreep {
         const targets = this.creep.room.find(FIND_HOSTILE_CREEPS);
         const spawns = this.creep.room.find(FIND_HOSTILE_SPAWNS);
 
-        if (!Memory.intel) {
-            Memory.intel = {
-                rooms: {}
-            };
-        }
-
         Memory.intel.rooms[this.creep.room.name] = {
             creeps: targets.length,
             spawns: spawns.length
         }
-
-        Logger.info(JSON.stringify(Memory.intel, null, 2));
     }
 
     getRandomRoom() {
         var rooms = Object.values(Game.map.describeExits(this.creep.room.name));
+        rooms = _.filter(rooms, function(o) {
+            return "W19S47" !== o;
+        });
         return rooms[Math.floor(Math.random() * rooms.length)];
     }
 }
