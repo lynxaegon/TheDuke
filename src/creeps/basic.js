@@ -73,7 +73,9 @@ class BasicCreep {
             case "upgradeController":
                 target = Game.getObjectById(this.creep.memory.stateParams.target);
                 this.creep.say("Upgrading...");
-                this.creep.signController(target, "Q: How did the hipster burn his tongue? A: He drank his coffee before it was cool.");
+                if (this.creep.room.controller.sign.username !== "LynxAegon") {
+                    this.creep.signController(target, "Q: How did the hipster burn his tongue? A: He drank his coffee before it was cool.");
+                }
                 this.creep.upgradeController(target);
                 break;
             default:
