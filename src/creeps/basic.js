@@ -73,7 +73,7 @@ class BasicCreep {
             case "upgradeController":
                 target = Game.getObjectById(this.creep.memory.stateParams.target);
                 this.creep.say("Upgrading...");
-                if (this.creep.room.controller.sign.username !== "LynxAegon") {
+                if (!this.creep.room.controller.sign || this.creep.room.controller.sign.username !== "LynxAegon") {
                     this.creep.signController(target, "Q: How did the hipster burn his tongue? A: He drank his coffee before it was cool.");
                 }
                 this.creep.upgradeController(target);
@@ -85,11 +85,14 @@ class BasicCreep {
 
     cleanup() {
         var target;
+        var range = 1;
         switch (this.creep.memory.state) {
             case "move":
                 if (this._isMoveByTarget()) {
                     target = Game.getObjectById(this.creep.memory.stateParams.target);
-                    if (this.creep.pos.inRangeTo(target, 1)) {
+                    if (this.peekState(1) == "upgradeController")
+                        range = 3;
+                    if (this.creep.pos.inRangeTo(target, range)) {
                         this.creep.say("via target");
                         this.finishState();
                     }
@@ -151,9 +154,10 @@ class BasicCreep {
         return this.creep.memory.pipeline.states.length == 0;
     }
 
-    peekState() {
-        if (this.creep.memory.pipeline.states.length > 0) {
-            return this.creep.memory.pipeline.states[0];
+    peekState(index) {
+        index = index || 0;
+        if (this.creep.memory.pipeline.states.length > 0 && this.creep.memory.pipeline.states[index]) {
+            return this.creep.memory.pipeline.states[index];
         }
         return null;
     }

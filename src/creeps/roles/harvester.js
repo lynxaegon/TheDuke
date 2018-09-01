@@ -9,15 +9,17 @@ class Harvester extends BasicCreep {
     }
 
     execute() {
+        var target;
         if (this.isIdle()) {
             if (this.creep.carry.energy < this.creep.carryCapacity) {
                 var sources = this.creep.room.find(FIND_SOURCES);
                 if (sources.length) {
+                    target = sources[Game.time % sources.length];
                     this.addState("move", {
-                        target: sources[0].id
+                        target: target.id
                     });
                     this.addState("harvest", {
-                        target: sources[0].id
+                        target: target.id
                     });
                 }
             } else {

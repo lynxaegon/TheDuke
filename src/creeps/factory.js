@@ -10,7 +10,7 @@ class Factory {
             });
         }
 
-        if (!creeps[Creep_Upgrader.role] || creeps[Creep_Upgrader.role].length < 1) {
+        if (!creeps[Creep_Upgrader.role] || creeps[Creep_Upgrader.role].length < 4) {
             Game.spawns.Spawn1.spawnCreep([MOVE, CARRY, WORK], nanoid(), {
                 memory: {
                     role: Creep_Upgrader.role
@@ -18,7 +18,7 @@ class Factory {
             });
         }
 
-        if (!creeps[Creep_Harvester.role] || creeps[Creep_Harvester.role].length < 1) {
+        if (!creeps[Creep_Harvester.role] || creeps[Creep_Harvester.role].length < 2) {
             Game.spawns.Spawn1.spawnCreep([MOVE, CARRY, WORK], nanoid(), {
                 memory: {
                     role: Creep_Harvester.role

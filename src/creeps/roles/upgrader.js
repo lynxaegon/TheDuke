@@ -14,11 +14,7 @@ class Upgrader extends BasicCreep {
             if (this.creep.carry.energy < this.creep.carryCapacity) {
                 var sources = this.creep.room.find(FIND_SOURCES);
                 if (sources.length) {
-                    if (sources[1]) {
-                        target = sources[1];
-                    } else {
-                        target = sources[0];
-                    }
+                    target = sources[Game.time % sources.length];
                     this.addState("move", {
                         target: target.id
                     });
