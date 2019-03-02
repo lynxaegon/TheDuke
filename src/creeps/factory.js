@@ -14,7 +14,7 @@ class Factory {
       for(var i in CreepConfigs){
         console.log(i, creeps[i].length + " / " + CreepConfigs[i].count)
         if(CreepConfigs[i].count > 0 && creeps[i].length < CreepConfigs[i].count){
-          spawnCreep(CreepConfigs[i])
+          this.spawnCreep(CreepConfigs[i]);
         }
       }
     }
