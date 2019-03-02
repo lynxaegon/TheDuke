@@ -1,30 +1,31 @@
 const nanoid = require("utils.nanoid");
+const SpawnErrors = {
+  "0": "OK",
+  "-1": "ERR_NOT_OWNER",
+  "-3": "ERR_NAME_EXISTS",
+  "-4": "ERR_BUSY",
+  "-6": "ERR_NOT_ENOUGH_ENERGY",
+  "-10": "ERR_INVALID_ARGS",
+  "-14": "ERR_RCL_NOT_ENOUGH"
+}
 
 class Factory {
     constructor(creeps) {
-        if (!creeps[Creep_Wanderer.role] || creeps[Creep_Wanderer.role].length < 5) {
-            Game.spawns.Spawn1.spawnCreep([MOVE], nanoid(), {
-                memory: {
-                    role: Creep_Wanderer.role
-                }
-            });
+      for(var i in CreepConfigs){
+        console.log(i, creeps[i].length + " / " + CreepConfigs[i].count)
+        if(CreepConfigs[i].count > 0 && creeps[i].length < CreepConfigs[i].count){
+          spawnCreep(CreepConfigs[i])
         }
+      }
+    }
 
-        if (!creeps[Creep_Upgrader.role] || creeps[Creep_Upgrader.role].length < 4) {
-            Game.spawns.Spawn1.spawnCreep([MOVE, CARRY, WORK], nanoid(), {
-                memory: {
-                    role: Creep_Upgrader.role
-                }
-            });
-        }
-
-        if (!creeps[Creep_Harvester.role] || creeps[Creep_Harvester.role].length < 2) {
-            Game.spawns.Spawn1.spawnCreep([MOVE, CARRY, WORK], nanoid(), {
-                memory: {
-                    role: Creep_Harvester.role
-                }
-            });
-        }
+    spawnCreep(config){
+      var result = Game.spawns.Spawn1.spawnCreep(config.parts, nanoid(), {
+          memory: {
+              role: config.role
+          }
+      });
+      console.log("spawning", config.parts, "result:", SpawnErrors[result]);
     }
 }
 module.exports = Factory;

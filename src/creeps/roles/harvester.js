@@ -1,7 +1,11 @@
 const BasicCreep = require("creeps.basic");
-class Harvester extends BasicCreep {
-    static get role() {
-        return "harvester";
+class Creep extends BasicCreep {
+    static get config(){
+      return {
+        count: 1,
+        parts: [MOVE, CARRY, WORK],
+        role: "harvester"
+      };
     }
 
     constructor() {
@@ -43,4 +47,5 @@ class Harvester extends BasicCreep {
         super.execute();
     }
 }
-module.exports = Harvester;
+module.exports = Creep;
+global.RoleToCreepClass[Creep.config.role] = Creep;

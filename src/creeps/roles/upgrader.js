@@ -1,7 +1,11 @@
 const BasicCreep = require("creeps.basic");
-class Upgrader extends BasicCreep {
-    static get role() {
-        return "upgrader";
+class Creep extends BasicCreep {
+    static get config(){
+      return {
+        count: 0,
+        parts: [MOVE, CARRY, WORK],
+        role: "upgrader"
+      };
     }
 
     constructor() {
@@ -34,4 +38,5 @@ class Upgrader extends BasicCreep {
         super.execute();
     }
 }
-module.exports = Upgrader;
+module.exports = Creep;
+global.RoleToCreepClass[Creep.config.role] = Creep;

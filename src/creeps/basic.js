@@ -9,16 +9,18 @@ class BasicCreep {
         }
     }
 
-    execute(forced) {
-        if (this.creep.memory.pipeline.states.length > 10) {
-            Logger.info("too many states queued...");
-            return;
-        }
-        if (!this.creep.memory.state && this.creep.memory.pipeline.states.length > 0) {
-            this.creep.memory.state = this.creep.memory.pipeline.states[0];
-            this.creep.memory.stateParams = this.creep.memory.pipeline.params[0];
-        }
+    plan(){
+      if (this.creep.memory.pipeline.states.length > 10) {
+          Logger.info("too many states queued...");
+          return;
+      }
+      if (!this.creep.memory.state && this.creep.memory.pipeline.states.length > 0) {
+          this.creep.memory.state = this.creep.memory.pipeline.states[0];
+          this.creep.memory.stateParams = this.creep.memory.pipeline.params[0];
+      }
+    }
 
+    execute(forced) {
         var target;
 
         switch (this.creep.memory.state) {

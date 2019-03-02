@@ -1,7 +1,5 @@
+require("colony.config");
 var CreepFactory = require("creeps.factory");
-global.Creep_Wanderer = require("creeps.roles.wanderer");
-global.Creep_Harvester = require("creeps.roles.harvester");
-global.Creep_Upgrader = require("creeps.roles.upgrader");
 
 class TheDuke {
     handler() {
@@ -34,42 +32,27 @@ class TheDuke {
         // for (var name in Game.rooms) {
         //     Logger.info("Rooms", name);
         // }
-        this.creeps = {};
+        this.creeps = [];
+        for(var i in CreepConfigs){
+          this.creeps[i] = [];
+        }
 
+        var role;
         for (var name in Game.creeps) {
             if (Game.creeps[name].spawning) {
                 continue;
             }
-
-            switch (Game.creeps[name].memory.role) {
-                case Creep_Wanderer.role:
-                    if (!this.creeps[Creep_Wanderer.role])
-                        this.creeps[Creep_Wanderer.role] = [];
-
-                    this.creeps[Creep_Wanderer.role].push(new Creep_Wanderer(Game.creeps[name]));
-                    break;
-                case Creep_Upgrader.role:
-                    if (!this.creeps[Creep_Upgrader.role])
-                        this.creeps[Creep_Upgrader.role] = [];
-
-                    this.creeps[Creep_Upgrader.role].push(new Creep_Upgrader(Game.creeps[name]));
-                    break;
-                case Creep_Harvester.role:
-                    if (!this.creeps[Creep_Harvester.role])
-                        this.creeps[Creep_Harvester.role] = [];
-
-                    this.creeps[Creep_Harvester.role].push(new Creep_Harvester(Game.creeps[name]));
-                    break;
-            }
+            role = Game.creeps[name].memory.role;
+            this.creeps[role].push(new RoleToCreepClass[role](Game.creeps[name]));
         }
 
         new CreepFactory(this.creeps);
-
     }
 
     runPhase() {
         for (var i in this.creeps) {
             for (var j in this.creeps[i]) {
+                this.creeps[i][j].plan();
                 this.creeps[i][j].execute();
                 this.creeps[i][j].cleanup();
             }

@@ -1,7 +1,11 @@
 const BasicCreep = require("creeps.basic");
-class Wanderer extends BasicCreep {
-    static get role() {
-        return "wanderer";
+class Creep extends BasicCreep {
+    static get config(){
+      return {
+        count: 0,
+        parts: [MOVE],
+        role: "wanderer"
+      };
     }
 
     constructor() {
@@ -41,4 +45,5 @@ class Wanderer extends BasicCreep {
         return rooms[Math.floor(Math.random() * rooms.length)];
     }
 }
-module.exports = Wanderer;
+module.exports = Creep;
+global.RoleToCreepClass[Creep.config.role] = Creep;
