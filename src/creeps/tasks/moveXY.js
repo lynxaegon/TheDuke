@@ -25,7 +25,7 @@ class Task extends BasicTask {
 			this.creep.api.say("diff room");
 			return false;
 		} else if (this.creep.api.pos.x == this.memory.x && this.creep.api.pos.y == this.memory.y) {
-			this.creep,api.say("via x,y");
+			this.creep.api.say("via x,y");
 			return true;
 		}
 

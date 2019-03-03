@@ -4,17 +4,24 @@ class BasicCreep {
         this.api = creep;
 		this.memory = this.api.memory;
         this.formatMemory();
+		
+		this.recursionCount = 0;
+		this.recursionLimit = 10;
+		this.maxQueuedStates = 10;
 
 		this.creepTask = new CreepTask(this);
     }
 
 	preExecute(noTickUpdate){
+		this.recursionCount++;
+		if(this.recursionCount >= this.recursionLimit)
+			return;
 		if(noTickUpdate)
 			this.onTick();
 
 		var result = this.creepTask.preExecute();
 		if(!result){
-			if (this.memory.pipeline.states.length > 10) {
+			if (this.memory.pipeline.states.length > this.maxQueuedStates) {
 				Logger.info("too many states queued...");
 				return false;
 			}
@@ -36,7 +43,7 @@ class BasicCreep {
 	}
 
 	plan(){
-		
+
 	}
 
     forceState(state, params) {

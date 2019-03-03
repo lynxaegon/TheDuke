@@ -2,7 +2,7 @@ global.CreepTypes = {};
 global.TaskTypes = {};
 global.CreepConfigs = {}
 var creeps = [
-  // require("creeps.roles.wanderer"),
+  require("creeps.roles.wanderer"),
   require("creeps.roles.harvester"),
   require("creeps.roles.upgrader")
 ];

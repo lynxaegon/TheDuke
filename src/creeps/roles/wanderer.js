@@ -2,7 +2,7 @@ const BasicCreep = require("creeps.basic");
 class Creep extends BasicCreep {
     static get config(){
       return {
-        count: 0,
+        count: 5,
         parts: [MOVE],
         role: "wanderer"
       };

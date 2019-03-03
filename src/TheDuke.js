@@ -50,7 +50,7 @@ class TheDuke {
             this.creeps[role].push(new CreepTypes[role](Game.creeps[name]));
         }
 
-        new CreepFactory(this.creeps);
+        new CreepFactory(Game.spawns.Spawn1, this.creeps);
     }
 
     runPhase() {

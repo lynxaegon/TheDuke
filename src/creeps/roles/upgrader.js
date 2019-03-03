@@ -12,13 +12,13 @@ class Creep extends BasicCreep {
         super(...arguments);
     }
 
-    execute() {
+    plan() {
         var target;
-        if (this.creep.carry.energy < this.creep.carryCapacity) {
-            var sources = this.creep.room.find(FIND_SOURCES);
+        if (this.api.carry.energy < this.api.carryCapacity) {
+            var sources = this.api.room.find(FIND_SOURCES);
             if (sources.length) {
                 target = sources[Game.time % sources.length];
-                this.addState("move", {
+                this.addState("moveToTarget", {
                     target: target.id
                 });
                 this.addState("harvest", {
@@ -26,14 +26,13 @@ class Creep extends BasicCreep {
                 });
             }
         } else {
-            this.addState("move", {
-                target: this.creep.room.controller.id
+            this.addState("moveToTarget", {
+                target: this.api.room.controller.id
             });
             this.addState("upgradeController", {
-                target: this.creep.room.controller.id
+                target: this.api.room.controller.id
             });
         }
-        super.execute();
     }
 }
 module.exports = Creep;
