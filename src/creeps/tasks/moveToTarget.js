@@ -11,6 +11,19 @@ class Task extends BasicTask {
 		return Task.config
 	}
 
+	preExecute(){
+		if(!this.memory.oldPos){
+			this.saveOldPosition();
+		} else {
+			if(this.memory.oldPos.x == this.creep.api.pos.x && this.memory.oldPos.y == this.creep.api.pos.y){
+				return this.getResult(CreepTaskResult.STUCK);
+			} else {
+				this.saveOldPosition();
+			}
+		}
+		return super.preExecute();
+	}
+
 	execute(){
 		if (this.creep.api.moveTo(this.creep.getTarget(), {
 				noPathFinding: true
@@ -33,6 +46,13 @@ class Task extends BasicTask {
 		}
 
 		return false;
+	}
+
+	saveOldPosition(){
+		this.memory.oldPos = {
+			x: this.creep.api.pos.x,
+			y: this.creep.api.pos.y
+		}
 	}
 }
 
