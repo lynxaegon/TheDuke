@@ -23,7 +23,8 @@ class Task extends BasicTask {
 	isFinished(){
 		if (this.memory.r !== this.creep.api.room.name) {
 			this.creep.api.say("diff room");
-			return false;
+			// TODO: fix room to room traveling, this should return false and update to new room coordinates
+			return true;
 		} else if (this.creep.api.pos.x == this.memory.x && this.creep.api.pos.y == this.memory.y) {
 			this.creep.api.say("via x,y");
 			return true;
