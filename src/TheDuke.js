@@ -43,7 +43,11 @@ class TheDuke {
                 continue;
             }
             role = Game.creeps[name].memory.role;
-            this.creeps[role].push(new RoleToCreepClass[role](Game.creeps[name]));
+			if(!CreepTypes[role]){
+				console.log("Invalid role '" + role + "'");
+				continue;
+			}
+            this.creeps[role].push(new CreepTypes[role](Game.creeps[name]));
         }
 
         new CreepFactory(this.creeps);
@@ -52,9 +56,11 @@ class TheDuke {
     runPhase() {
         for (var i in this.creeps) {
             for (var j in this.creeps[i]) {
-                this.creeps[i][j].plan();
+				// console.log("-------------- [start] " + this.creeps[i][j].api.name + "--------------");
+                this.creeps[i][j].preExecute();
                 this.creeps[i][j].execute();
-                this.creeps[i][j].cleanup();
+                this.creeps[i][j].postExecute();
+				// console.log("-------------- [end]" + this.creeps[i][j].api.name + "--------------");
             }
         }
     }

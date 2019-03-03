@@ -12,33 +12,36 @@ class Creep extends BasicCreep {
         super(...arguments);
     }
 
-    execute() {
-        if (!this.creep.memory.state) {
-            this.getIntel();
-            var room = this.getRandomRoom();
-            var exit = this.creep.pos.findClosestByRange(this.creep.room.findExitTo(room))
-            this.addState("move", {
-                x: exit.x,
-                y: exit.y,
-                r: exit.roomName,
-                nextRoom: room
-            });
-        }
-        super.execute();
+    plan() {
+        this.getIntel();
+        var room = this.getRandomRoom();
+        var exit = this.api.pos.findClosestByRange(this.api.room.findExitTo(room))
+        this.addState("moveXY", {
+            x: exit.x,
+            y: exit.y,
+            r: exit.roomName,
+            nextRoom: room
+        });
+		console.log("next", JSON.stringify({
+            x: exit.x,
+            y: exit.y,
+            r: exit.roomName,
+            nextRoom: room
+        }));
     }
 
     getIntel() {
-        const targets = this.creep.room.find(FIND_HOSTILE_CREEPS);
-        const spawns = this.creep.room.find(FIND_HOSTILE_SPAWNS);
+        const targets = this.api.room.find(FIND_HOSTILE_CREEPS);
+        const spawns = this.api.room.find(FIND_HOSTILE_SPAWNS);
 
-        Memory.intel.rooms[this.creep.room.name] = {
+        Memory.intel.rooms[this.api.room.name] = {
             creeps: targets.length,
             spawns: spawns.length
         }
     }
 
     getRandomRoom() {
-        var rooms = Object.values(Game.map.describeExits(this.creep.room.name));
+        var rooms = Object.values(Game.map.describeExits(this.api.room.name));
         rooms = _.filter(rooms, function(o) {
             return "W19S47" !== o;
         });
@@ -46,4 +49,3 @@ class Creep extends BasicCreep {
     }
 }
 module.exports = Creep;
-global.RoleToCreepClass[Creep.config.role] = Creep;

@@ -1,10 +1,25 @@
-global.RoleToCreepClass = {};
+global.CreepTypes = {};
+global.TaskTypes = {};
 global.CreepConfigs = {}
-global.CreepTypes = [
-  require("creeps.roles.wanderer"),
+var creeps = [
+  // require("creeps.roles.wanderer"),
   require("creeps.roles.harvester"),
   require("creeps.roles.upgrader")
-]
-for(var i in CreepTypes){
-  CreepConfigs[CreepTypes[i].config.role] = CreepTypes[i].config;
+];
+var tasks = [
+  require("creeps.tasks.moveToTarget"),
+  require("creeps.tasks.moveXY"),
+  require("creeps.tasks.harvest"),
+  require("creeps.tasks.transfer"),
+  require("creeps.tasks.upgradeController"),
+];
+
+
+for(var i in creeps){
+  CreepConfigs[creeps[i].config.role] = creeps[i].config;
+  CreepTypes[creeps[i].config.role] = creeps[i];
+}
+
+for(var i in tasks){
+  TaskTypes[tasks[i].config.task] = tasks[i];
 }

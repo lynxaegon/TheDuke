@@ -11,12 +11,17 @@ const SpawnErrors = {
 
 class Factory {
     constructor(creeps) {
-      for(var i in CreepConfigs){
-        console.log(i, creeps[i].length + " / " + CreepConfigs[i].count)
-        if(CreepConfigs[i].count > 0 && creeps[i].length < CreepConfigs[i].count){
-          this.spawnCreep(CreepConfigs[i]);
-        }
-      }
+		if(isBusy(Game.spawns.Spawn1)){
+			console.log("Spawn is busy!");
+			return;
+		}
+
+		for(var i in CreepConfigs){
+			console.log(i, creeps[i].length + " / " + CreepConfigs[i].count)
+			if(CreepConfigs[i].count > 0 && creeps[i].length < CreepConfigs[i].count){
+				this.spawnCreep(CreepConfigs[i]);
+			}
+		}
     }
 
     spawnCreep(config){
@@ -27,5 +32,9 @@ class Factory {
       });
       console.log("spawning", config.parts, "result:", SpawnErrors[result]);
     }
+
+	isBusy(spawn) {
+		return !!spawn.spawning;
+	}
 }
 module.exports = Factory;
