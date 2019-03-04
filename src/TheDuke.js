@@ -2,7 +2,9 @@ var CreepFactory = require("creeps.factory");
 global.Creep_Wanderer = require("creeps.roles.wanderer");
 global.Creep_Harvester = require("creeps.roles.harvester");
 global.Creep_Upgrader = require("creeps.roles.upgrader");
+global.SCREEPS_PROFILER = require("utils.profiler");
 
+SCREEPS_PROFILER.enable();
 class TheDuke {
     handler() {
         if (!Memory.suspend && Game.cpu.bucket < 500) {
@@ -25,9 +27,11 @@ class TheDuke {
 
     // Run phases
     loop() {
-        this.initPhase();
-        this.runPhase();
-        this.visualsPhase();
+		SCREEPS_PROFILER.wrap(function(){
+			this.initPhase();
+			this.runPhase();
+			this.visualsPhase();
+		}.bind(this));
     }
 
     initPhase() {
@@ -37,6 +41,8 @@ class TheDuke {
         this.creeps = {};
 
         for (var name in Game.creeps) {
+        	// Game.creeps[name].room.lookAtArea(0, 0, 49, 49);
+        	// break;
             if (Game.creeps[name].spawning) {
                 continue;
             }
