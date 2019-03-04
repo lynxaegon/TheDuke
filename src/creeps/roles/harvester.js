@@ -1,46 +1,47 @@
 const BasicCreep = require("creeps.basic");
-class Harvester extends BasicCreep {
-    static get role() {
-        return "harvester";
+class Creep extends BasicCreep {
+    static get config(){
+      return {
+        count: 6,
+        parts: [MOVE, CARRY, WORK],
+        role: "harvester"
+      };
     }
 
     constructor() {
         super(...arguments);
     }
 
-    execute() {
+	plan() {
         var target;
-        if (this.isIdle()) {
-            if (this.creep.carry.energy < this.creep.carryCapacity) {
-                var sources = this.creep.room.find(FIND_SOURCES);
-                if (sources.length) {
-                    target = sources[Game.time % sources.length];
-                    this.addState("move", {
-                        target: target.id
-                    });
-                    this.addState("harvest", {
-                        target: target.id
-                    });
-                }
+        if (this.api.carry.energy < this.api.carryCapacity) {
+            var sources = this.api.room.find(FIND_SOURCES);
+            if (sources.length) {
+                target = sources[Game.time % sources.length];
+                this.addState("moveToTarget", {
+                    target: target.id
+                });
+                this.addState("harvest", {
+                    target: target.id
+                });
+            }
+        } else {
+            if (Game.spawns['Spawn1'].energy == Game.spawns['Spawn1'].energyCapacity) {
+                this.addState("moveToTarget", {
+                    target: this.api.room.controller.id
+                });
+                this.addState("upgradeController", {
+                    target: this.api.room.controller.id
+                });
             } else {
-                if (Game.spawns['Spawn1'].energy == Game.spawns['Spawn1'].energyCapacity) {
-                    this.addState("move", {
-                        target: this.creep.room.controller.id
-                    });
-                    this.addState("upgradeController", {
-                        target: this.creep.room.controller.id
-                    });
-                } else {
-                    this.addState("move", {
-                        target: Game.spawns['Spawn1'].id
-                    });
-                    this.addState("transfer", {
-                        target: Game.spawns['Spawn1'].id
-                    });
-                }
+                this.addState("moveToTarget", {
+                    target: Game.spawns['Spawn1'].id
+                });
+                this.addState("transfer", {
+                    target: Game.spawns['Spawn1'].id
+                });
             }
         }
-        super.execute();
     }
 }
-module.exports = Harvester;
+module.exports = Creep;
