@@ -24,6 +24,7 @@ class CreepTask {
         }
 
 		if(!this.memory.state){
+			this.creep.finishState();
 			return false;
 		}
 

@@ -33,7 +33,7 @@ class Task extends BasicTask {
 	}
 
 	isFinished(){
-		if (this.taskMemory.r == this.creep.api.room.name) {
+		if (this.taskMemory.r && this.taskMemory.r == this.creep.api.room.name) {
 			return true;
 		} else if (this.creep.api.pos.x == this.taskMemory.x && this.creep.api.pos.y == this.taskMemory.y) {
 			return true;
