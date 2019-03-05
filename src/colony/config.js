@@ -1,17 +1,20 @@
 global.CreepTypes = {};
 global.TaskTypes = {};
-global.CreepConfigs = {}
+global.CreepConfigs = {};
 var creeps = [
-  require("creeps.roles.wanderer"),
-  require("creeps.roles.harvester"),
-  require("creeps.roles.upgrader")
+	require("creeps.roles.harvester"),
+	require("creeps.roles.upgrader"),
+	require("creeps.roles.wanderer"),
+	require("creeps.roles.attacker"),
 ];
 var tasks = [
+  require("creeps.tasks.idle"),
   require("creeps.tasks.moveToTarget"),
   require("creeps.tasks.moveXY"),
   require("creeps.tasks.harvest"),
   require("creeps.tasks.transfer"),
   require("creeps.tasks.upgradeController"),
+  require("creeps.tasks.attack"),
 ];
 
 

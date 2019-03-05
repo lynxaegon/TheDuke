@@ -1,10 +1,10 @@
-var url = '_~getRandomVcryp0123456789bfhijklqsuvwxzABCDEFGHIJKLMNOPQSTUWXYZ'
+var url = 'getRandomVcryp0123456789bfhijklqsuvwxzABCDEFGHIJKLMNOPQSTUWXYZ';
 
 module.exports = function(size) {
-    size = size || 6
-    var id = ''
+    size = size || 6;
+    var id = '';
     while (0 < size--) {
-        id += url[Math.random() * 64 | 0]
+        id += url[Math.random() * 62 | 0]
     }
-    return id
-}
+    return id;
+};

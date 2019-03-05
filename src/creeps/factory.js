@@ -23,16 +23,24 @@ const PartCost = {
 class Factory {
     constructor(spawn, creeps) {
 		this.spawn = spawn;
+		var buildCreep = false;
+		for(var i in CreepConfigs){
+			console.log(i, creeps[i].length + " / " + CreepConfigs[i].count)
+			if(!buildCreep) {
+				if (CreepConfigs[i].count > 0 && creeps[i].length < CreepConfigs[i].count) {
+					buildCreep = CreepConfigs[i];
+				}
+			}
+		}
+
 		if(this.isBusy()){
 			console.log("[Factory]["+this.spawn.name+"] is busy!");
 			return;
 		}
-
-		for(var i in CreepConfigs){
-			console.log(i, creeps[i].length + " / " + CreepConfigs[i].count)
-			if(CreepConfigs[i].count > 0 && creeps[i].length < CreepConfigs[i].count){
-				if(this.canSpawnCreep())
-					this.spawnCreep(CreepConfigs[i]);
+		// build only 1 type of required creep, by priority list (from config.js)
+		if(buildCreep) {
+			if (this.canSpawnCreep(buildCreep.parts)) {
+				this.spawnCreep(buildCreep);
 			}
 		}
     }
@@ -51,17 +59,18 @@ class Factory {
 	}
 
 	canSpawnCreep(parts){
-		var cost = this._calculateCreepCost(parts);
+		var cost = Factory.calculateCreepCost(parts);
+		console.log("[Factory] Can Spawn ",JSON.stringify(parts),"COST:", cost, "has energy:", this.spawn.energy >= cost);
 		if(this.spawn.energy >= cost)
 			return true;
 
 		return false;
 	}
 
-	_calculateCreepCost(parts){
+	static calculateCreepCost(parts){
 		var cost = 0;
 		for(var i in parts){
-			cost += PartCost[parts[i]];
+			cost += PartCost[parts[i].toUpperCase()];
 		}
 
 		return cost;

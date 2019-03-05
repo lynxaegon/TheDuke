@@ -11,50 +11,50 @@ class Task extends BasicTask {
 		return Task.config
 	}
 
-	// preExecute(){
-	// 	if(!this.memory.oldPos){
-	// 		this.saveOldPosition();
-	// 	} else {
-	// 		if(this.memory.oldPos.x == this.creep.api.pos.x && this.memory.oldPos.y == this.creep.api.pos.y){
-	// 			console.log("stuck!");
-	// 			return this.getResult(CreepTaskResult.STUCK);
-	// 		} else {
-	// 			this.saveOldPosition();
-	// 		}
-	// 	}
-	// 	return super.preExecute();
-	// }
+	preExecute(){
+		if(this.taskMemory.oldPos) {
+			if (this.taskMemory.oldPos.x == this.creep.api.pos.x && this.taskMemory.oldPos.y == this.creep.api.pos.y && this.taskMemory.oldPos.cnt >= 1) {
+				return this.getResult(CreepTaskResult.STUCK);
+			}
+		}
+
+		return super.preExecute();
+	}
 
 	execute(){
-		if (this.creep.api.moveTo(this.creep.getTarget(), {
-				noPathFinding: true
-			}) == ERR_NOT_FOUND) {
-			this.creep.api.moveTo(this.creep.getTarget());
-		}
+		this.creep.api.travelTo(this.creep.getTarget());
 		return this.getResult(CreepTaskResult.EXECUTED);
+	}
+
+	postExecute(){
+		this.saveOldPosition();
+		return super.postExecute();
 	}
 
 	isFinished(){
 		var range = 1;
 		// TODO: Apply peekState().rangeCheck
-		// console.log("IS FINISHED", this.creep.api.pos.inRangeTo(this.creep.getTarget(), range));
 		if (this.creep.peekState(1) == "upgradeController")
 			range = 3;
 
 		if (this.creep.api.pos.inRangeTo(this.creep.getTarget(), range)) {
-			this.creep.api.say("via target");
 			return true;
 		}
 
 		return false;
 	}
 
-	// saveOldPosition(){
-	// 	this.memory.oldPos = {
-	// 		x: this.creep.api.pos.x,
-	// 		y: this.creep.api.pos.y
-	// 	}
-	// }
+	saveOldPosition(){
+		if (this.taskMemory.oldPos && this.taskMemory.oldPos.x == this.creep.api.pos.x && this.taskMemory.oldPos.y == this.creep.api.pos.y) {
+			this.taskMemory.oldPos.cnt += 1;
+		} else {
+			this.taskMemory.oldPos = {
+				x: this.creep.api.pos.x,
+				y: this.creep.api.pos.y,
+				cnt: 0
+			}
+		}
+	}
 }
 
 module.exports =  Task;

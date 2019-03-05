@@ -6,13 +6,25 @@ class Mem {
                 rooms: {}
             };
         }
+
+		if (!Memory.rooms) {
+			Memory.rooms = {};
+		}
+
+		if(!Memory._grafana_stats){
+        	Memory._grafana_stats = {
+        		creeps: {}
+			};
+		}
     }
 
     // cleanup stale memory
     gc() {
         for (var i in Memory.creeps) {
             if (!Game.creeps[i]) {
-                delete Memory.creeps[i];
+				if(Memory._grafana_stats && Memory._grafana_stats.creeps)
+                	delete Memory._grafana_stats.creeps[Memory.creeps[i].role][i];
+				delete Memory.creeps[i];
             }
         }
 

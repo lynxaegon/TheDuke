@@ -107,7 +107,7 @@ function wrapFunction(name, originalFunction) {
 
 	wrappedFunction.profilerWrapped = true;
 	wrappedFunction.toString = () =>
-	`// screeps-profiler wrapped function:\n${originalFunction.toString()}`;
+		`// screeps-profiler wrapped function:\n${originalFunction.toString()}`;
 
 	return wrappedFunction;
 }
@@ -115,7 +115,7 @@ function wrapFunction(name, originalFunction) {
 function hookUpPrototypes() {
 	Profiler.prototypes.forEach(proto => {
 		profileObjectFunctions(proto.val, proto.name);
-});
+	});
 }
 
 function profileObjectFunctions(object, label) {
@@ -124,46 +124,46 @@ function profileObjectFunctions(object, label) {
 	Object.getOwnPropertyNames(objectToWrap).forEach(functionName => {
 		const extendedLabel = `${label}.${functionName}`;
 
-	const isBlackListed = functionBlackList.indexOf(functionName) !== -1;
-	if (isBlackListed) {
-		return;
-	}
-
-	const descriptor = Object.getOwnPropertyDescriptor(objectToWrap, functionName);
-	if (!descriptor) {
-		return;
-	}
-
-	const hasAccessor = descriptor.get || descriptor.set;
-	if (hasAccessor) {
-		const configurable = descriptor.configurable;
-		if (!configurable) {
+		const isBlackListed = functionBlackList.indexOf(functionName) !== -1;
+		if (isBlackListed) {
 			return;
 		}
 
-		const profileDescriptor = {};
-
-		if (descriptor.get) {
-			const extendedLabelGet = `${extendedLabel}:get`;
-			profileDescriptor.get = profileFunction(descriptor.get, extendedLabelGet);
+		const descriptor = Object.getOwnPropertyDescriptor(objectToWrap, functionName);
+		if (!descriptor) {
+			return;
 		}
 
-		if (descriptor.set) {
-			const extendedLabelSet = `${extendedLabel}:set`;
-			profileDescriptor.set = profileFunction(descriptor.set, extendedLabelSet);
+		const hasAccessor = descriptor.get || descriptor.set;
+		if (hasAccessor) {
+			const configurable = descriptor.configurable;
+			if (!configurable) {
+				return;
+			}
+
+			const profileDescriptor = {};
+
+			if (descriptor.get) {
+				const extendedLabelGet = `${extendedLabel}:get`;
+				profileDescriptor.get = profileFunction(descriptor.get, extendedLabelGet);
+			}
+
+			if (descriptor.set) {
+				const extendedLabelSet = `${extendedLabel}:set`;
+				profileDescriptor.set = profileFunction(descriptor.set, extendedLabelSet);
+			}
+
+			Object.defineProperty(objectToWrap, functionName, profileDescriptor);
+			return;
 		}
 
-		Object.defineProperty(objectToWrap, functionName, profileDescriptor);
-		return;
-	}
-
-	const isFunction = typeof descriptor.value === 'function';
-	if (!isFunction) {
-		return;
-	}
-	const originalFunction = objectToWrap[functionName];
-	objectToWrap[functionName] = profileFunction(originalFunction, extendedLabel);
-});
+		const isFunction = typeof descriptor.value === 'function';
+		if (!isFunction) {
+			return;
+		}
+		const originalFunction = objectToWrap[functionName];
+		objectToWrap[functionName] = profileFunction(originalFunction, extendedLabel);
+	});
 
 	return objectToWrap;
 }
@@ -225,15 +225,15 @@ const Profiler = {
 	lines() {
 		const stats = Object.keys(Memory.profiler.map).map(functionName => {
 			const functionCalls = Memory.profiler.map[functionName];
-		return {
-			name: functionName,
-			calls: functionCalls.calls,
-			totalTime: functionCalls.time,
-			averageTime: functionCalls.time / functionCalls.calls,
-		};
-	}).sort((val1, val2) => {
+			return {
+				name: functionName,
+				calls: functionCalls.calls,
+				totalTime: functionCalls.time,
+				averageTime: functionCalls.time / functionCalls.calls,
+			};
+		}).sort((val1, val2) => {
 			return val2.totalTime - val1.totalTime;
-	});
+		});
 
 		const lines = stats.map(data => {
 			return [
@@ -242,7 +242,7 @@ const Profiler = {
 				data.averageTime.toFixed(3),
 				data.name,
 			].join('\t\t');
-	});
+		});
 
 		return lines;
 	},

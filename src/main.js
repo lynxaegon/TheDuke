@@ -4,10 +4,15 @@ server1.screepspl.us - overmind test
 screeps.space - The Duke (testing phase)
 */
 
+require('version');
+
 global._ = require('lodash');
 global.Logger = require('utils.logger');
 global.Mem = require('utils.memory');
-require('version');
+global.Cache = require('utils.cache');
+
+// 3rd party
+require("3rdparty.traveler");
 
 if (!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
     Memory.SCRIPT_VERSION = SCRIPT_VERSION;
@@ -24,6 +29,7 @@ module.exports.loop = function() {
 
     Mem.gc();
     Mem.format();
+	Cache.gc();
 
     // init The Duke from memory obj
     global.TheDuke = new _TheDuke();

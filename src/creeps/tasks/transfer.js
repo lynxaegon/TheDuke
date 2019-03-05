@@ -16,7 +16,7 @@ class Task extends BasicTask {
 		if (this.creep.api.transfer(this.creep.getTarget(), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 			this.creep.forceState("moveToTarget", {
 				target: this.creep.getTargetSerialized()
-			})
+			});
 		}
 		return super.execute();
 	}

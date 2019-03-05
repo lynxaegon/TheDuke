@@ -1,7 +1,8 @@
 class BasicTask {
 	constructor(creep, memory){
 		this.creep = creep;
-		this.memory = memory;
+		this.taskMemory = memory;
+		this.debug = false;
     }
 
 	preExecute() {
@@ -30,8 +31,12 @@ class BasicTask {
 	getResult(state){
 		return {
 			state: state,
-			memory: this.memory
+			memory: this.taskMemory
 		}
+	}
+
+	getCurrentTask(){
+		// return this.taskMemory.
 	}
 }
 

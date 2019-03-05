@@ -6,25 +6,35 @@ class BasicCreep {
         this.formatMemory();
 		
 		this.recursionCount = 0;
-		this.recursionLimit = 10;
+		this.recursionLimit = 2;
 		this.maxQueuedStates = 10;
 
 		this.creepTask = new CreepTask(this);
     }
 
+    get role(){
+    	return this.memory.role;
+	}
+
 	preExecute(noTickUpdate){
 		this.recursionCount++;
-		if(this.recursionCount >= this.recursionLimit)
+		if(this.recursionCount > this.recursionLimit) {
+			Logger.info("[Creep][" + this.api.name + " - " + this.role +"]", "Recursion limit reached! (Limit: "+ this.recursionLimit +")");
 			return;
+		}
 		if(noTickUpdate)
 			this.onTick();
 
 		var result = this.creepTask.preExecute();
 		if(!result){
 			if (this.memory.pipeline.states.length > this.maxQueuedStates) {
-				Logger.info("too many states queued...");
+				Logger.info("[Creep][" + this.api.name + " - " + this.role +"]", "too many states queued...");
 				return false;
 			}
+			// var oldTask = '';
+			// if(this.creepTask.task)
+			// 	oldTask = this.creepTask.task.config.task;
+			// console.log("Creep ["+this.api.name+" - " + this.role + "] Pre-execute (old task: '"+oldTask+"')");
 			this.plan();
 			this.preExecute(true);
 		}
@@ -47,7 +57,7 @@ class BasicCreep {
 	}
 
     forceState(state, params) {
-        Logger.info("forced state", state);
+        Logger.info("[Creep][" + this.api.name + " - " + this.role +"]","forced state", state);
         params['tick'] = Game.time;
         this.memory.pipeline.states.unshift(state);
         this.memory.pipeline.params.unshift(params);
@@ -58,6 +68,7 @@ class BasicCreep {
     }
 
     addState(state, params) {
+		params = params || {};
         params['tick'] = Game.time;
         this.memory.pipeline.states.push(state);
         this.memory.pipeline.params.push(params);
@@ -76,6 +87,11 @@ class BasicCreep {
         return null;
     }
 
+    reset() {
+		this.clearCurrentState();
+		delete this.memory.pipeline;
+	}
+
     finishState() {
         if (this.memory.pipeline.states.length > 0) {
             this.memory.pipeline.states.shift();
@@ -86,11 +102,11 @@ class BasicCreep {
 
     clearCurrentState() {
         delete this.memory.state;
-        delete this.memory.stateParams;
+        delete this.memory.taskParams;
     }
 
     hasTarget() {
-        if(!this.memory.stateParams || !this.memory.stateParams.target){
+        if(!this.memory.taskParams || !this.memory.taskParams.target){
             this.target = false;
             return false;
         }
@@ -99,8 +115,12 @@ class BasicCreep {
 
     updateTarget() {
         if(this.hasTarget()){
-            this.target = Game.getObjectById(this.memory.stateParams.target);
-            this.targetSerialized = this.memory.stateParams.target;
+			this.target = Cache.get("/game_object/" + this.memory.taskParams.target);
+        	if(!this.target) {
+				this.target = Game.getObjectById(this.memory.taskParams.target);
+				Cache.set("/game_object/" + this.memory.taskParams.target, this.target);
+			}
+			this.targetSerialized = this.memory.taskParams.target;
         } else {
           this.target = false;
           this.targetSerialized = false;
