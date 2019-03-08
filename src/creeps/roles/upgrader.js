@@ -3,7 +3,7 @@ class Creep extends BasicCreep {
     static get config(){
       return {
         count:2,
-        parts: [MOVE, CARRY, WORK],
+        parts: [MOVE, MOVE, CARRY, WORK],
         role: "upgrader"
       };
     }

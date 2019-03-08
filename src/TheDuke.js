@@ -1,5 +1,5 @@
 require("colony.config");
-var CreepFactory = require("creeps.factory");
+global.CreepFactory = require("creeps.factory");
 global.SCREEPS_PROFILER = require("utils.profiler");
 
 SCREEPS_PROFILER.enable();

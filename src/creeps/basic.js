@@ -6,7 +6,7 @@ class BasicCreep {
         this.formatMemory();
 		
 		this.recursionCount = 0;
-		this.recursionLimit = 2;
+		this.recursionLimit = 5;
 		this.maxQueuedStates = 10;
 
 		this.creepTask = new CreepTask(this);
