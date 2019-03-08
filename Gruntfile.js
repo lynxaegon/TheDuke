@@ -48,6 +48,12 @@ module.exports = function(grunt) {
                     dest: config.private_directory,
                 }
             },
+			simulation: {
+				options: {
+					src: './dist/',
+					dest: config.simulation_directory,
+				}
+			},
         },
         screeps: {
             options: {
@@ -64,5 +70,8 @@ module.exports = function(grunt) {
 
     grunt.registerTask('deploy', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps']);
     grunt.registerTask('private', ['clean', 'copy:screeps', 'file_append:versioning', 'rsync:private']);
+    grunt.registerTask('simulation', ['clean', 'copy:screeps', 'file_append:versioning', 'rsync:simulation']);
 
+
+	simulation_directory
 }
