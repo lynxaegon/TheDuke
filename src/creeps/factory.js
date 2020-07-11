@@ -10,70 +10,63 @@ const SpawnErrors = {
 };
 
 const PartCost = {
-	MOVE: 50,
-	WORK: 100,
-	CARRY: 50,
-	ATTACK: 80,
-	RANGED_ATTACK: 150,
-	HEAL: 250,
-	TOUGH: 10,
-	CLAIM: 600
+  MOVE: 50,
+  WORK: 100,
+  CARRY: 50,
+  ATTACK: 80,
+  RANGED_ATTACK: 150,
+  HEAL: 250,
+  TOUGH: 10,
+  CLAIM: 600
 };
 
 class Factory {
-    constructor(spawn, creeps) {
-		this.spawn = spawn;
-		var buildCreep = false;
-		for(var i in CreepConfigs){
-			console.log(i, creeps[i].length + " / " + CreepConfigs[i].count)
-			if(!buildCreep) {
-				if (CreepConfigs[i].count > 0 && creeps[i].length < CreepConfigs[i].count) {
-					buildCreep = CreepConfigs[i];
-				}
-			}
-		}
+  constructor(spawn) {
+    this.spawn = spawn;
+  }
 
-		if(this.isBusy()){
-			console.log("[Factory]["+this.spawn.name+"] is busy!");
-			return;
-		}
-		// build only 1 type of required creep, by priority list (from config.js)
-		if(buildCreep) {
-			if (this.canSpawnCreep(buildCreep.parts)) {
-				this.spawnCreep(buildCreep);
-			}
-		}
+  build(creepConfig) {
+    if (this.isBusy()) {
+      console.log("[Factory][" + this.spawn.name + "] is busy!");
+      return false;
     }
 
-    spawnCreep(config){
-      var result = this.spawn.spawnCreep(config.parts, nanoid(), {
-          memory: {
-              role: config.role
-          }
-      });
-      console.log("[Factory]["+this.spawn.name+"]",JSON.stringify(config.parts), "result:", SpawnErrors[result]);
+    if (this.canSpawnCreep(creepConfig.parts)) {
+      this.spawnCreep(creepConfig);
     }
 
-	isBusy() {
-		return !!this.spawn.spawning;
-	}
+    return true;
+  }
 
-	canSpawnCreep(parts){
-		var cost = Factory.calculateCreepCost(parts);
-		console.log("[Factory] Can Spawn ",JSON.stringify(parts),"COST:", cost, "has energy:", this.spawn.energy >= cost);
-		if(this.spawn.energy >= cost)
-			return true;
+  spawnCreep(config) {
+    var result = this.spawn.spawnCreep(config.parts, nanoid(), {
+      memory: {
+        role: config.role
+      }
+    });
+    console.log("[Factory][" + this.spawn.name + "]", JSON.stringify(config.parts), "result:", SpawnErrors[result]);
+  }
 
-		return false;
-	}
+  isBusy() {
+    return !!this.spawn.spawning;
+  }
 
-	static calculateCreepCost(parts){
-		var cost = 0;
-		for(var i in parts){
-			cost += PartCost[parts[i].toUpperCase()];
-		}
+  canSpawnCreep(parts) {
+    var cost = Factory.calculateCreepCost(parts);
+    console.log("[Factory] Can Spawn ", JSON.stringify(parts), "COST:", cost, "has energy:", this.spawn.energy >= cost);
+    if (this.spawn.energy >= cost)
+      return true;
 
-		return cost;
-	}
+    return false;
+  }
+
+  static calculateCreepCost(parts) {
+    var cost = 0;
+    for (var i in parts) {
+      cost += PartCost[parts[i].toUpperCase()];
+    }
+
+    return cost;
+  }
 }
 module.exports = Factory;

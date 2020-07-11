@@ -1,34 +1,34 @@
 const BasicTask = require("creeps.tasks.basicTask");
 
 class Task extends BasicTask {
-	static get config(){
-      return {
-        task: "attack"
-      };
+  static get config() {
+    return {
+      task: "attack"
+    };
+  }
+
+  get config() {
+    return Task.config
+  }
+
+  preExecute() {
+    if (!this.creep.getTarget()) {
+      return this.getResult(CreepTaskResult.FINISHED);
     }
 
-	get config(){
-		return Task.config
-	}
+    return super.preExecute();
+  }
 
-	preExecute(){
-		if(!this.creep.getTarget()) {
-			return this.getResult(CreepTaskResult.FINISHED);
-		}
+  execute() {
+    this.creep.api.travelTo(this.creep.target);
+    this.creep.api.attack(this.creep.target);
+    return super.execute();
+  }
 
-		return super.preExecute();
-	}
-
-	execute(){
-		this.creep.api.travelTo(this.creep.target);
-		this.creep.api.attack(this.creep.target);
-		return super.execute();
-	}
-
-	isFinished(){
-		return false;
-	}
+  isFinished() {
+    return false;
+  }
 
 }
 
-module.exports =  Task;
+module.exports = Task;
