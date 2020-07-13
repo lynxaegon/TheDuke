@@ -1,6 +1,6 @@
 module.exports = class Structure extends DukeObject {
-    constructor(memory, opts) {
-        super(memory, opts);
+    constructor(memory, api) {
+        super(memory, api);
 
         this.type = memory.type || false;
         this.room = memory.room || false;

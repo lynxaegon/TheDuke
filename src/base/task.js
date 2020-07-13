@@ -19,8 +19,8 @@ module.exports = class Task extends DukeObject {
         }
     }
 
-    constructor(memory, opts) {
-        super(memory, opts);
+    constructor(memory, api) {
+        super(memory, api);
 
         this.alive = false;
 

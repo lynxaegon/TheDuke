@@ -1,4 +1,4 @@
-const DBVersion = 1;
+const DBVersion = 2;
 
 class DukeMemory {
     constructor() {
@@ -23,6 +23,7 @@ class DukeMemory {
 
             this.state.creeps = {};
             this.state.structures = {};
+            this.state.rooms = {};
             this.state.tasks = {};
             this.state.cache = {};
         }

@@ -4,10 +4,11 @@
     <list default="true" id="efad86a1-80d9-4c8c-bf4e-808068de7a62" name="Default" comment="me">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TheDuke.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TheDuke.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/creep.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/creeps/creep.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/colony/colony.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/colony.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/creeps/creep.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/creep.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/structures/structure.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/structures/structure.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tasks/task.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/tasks/task.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/structures/structure.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/structure.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tasks/task.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/task.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/DukeObject.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DukeObject.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/memory.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/memory.js" afterDir="false" />
     </list>
@@ -69,6 +70,9 @@
     <property name="settings.editor.selected.configurable" value="Settings.JavaScript" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\andre\Dropbox\screeps\TheDuke\src\base" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\andre\Dropbox\screeps\TheDuke\src\tasks" />
       <recent name="$PROJECT_DIR$/src/creeps/roles" />
@@ -116,7 +120,7 @@
       <workItem from="1551691050599" duration="47142000" />
       <workItem from="1557833638890" duration="19000" />
       <workItem from="1594491510204" duration="13168000" />
-      <workItem from="1594564323308" duration="29920000" />
+      <workItem from="1594564323308" duration="36432000" />
     </task>
     <servers />
   </component>

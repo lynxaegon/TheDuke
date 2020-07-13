@@ -1,5 +1,8 @@
-const Creep = require("creeps.creep");
-const Structure = require("structures.structure");
+const Creep = require("base.creep");
+const Structure = require("base.structure");
+const Room = require("base.room");
+const Task = require('base.task');
+const Colony = require('base.colony');
 
 class TheDuke {
     init(memory) {
@@ -8,6 +11,7 @@ class TheDuke {
 
         this.structure = {
             creeps: {
+                id: "id",
                 loader: "game",
                 cls: Creep,
                 memory: "creeps",
@@ -15,6 +19,7 @@ class TheDuke {
                 dead: []
             },
             structures: {
+                id: "id",
                 loader: "game",
                 cls: Structure,
                 memory: "structures",
@@ -22,37 +27,88 @@ class TheDuke {
                 dead: []
             },
             tasks: {
+                id: "id",
                 loader: "memory",
                 cls: Task,
                 memory: "tasks",
+                alive: [],
+                dead: []
+            },
+            rooms: {
+                id: "name",
+                loader: "rooms",
+                cls: Room,
+                memory: "rooms",
                 alive: [],
                 dead: []
             }
         };
 
         for (let key in this.structure) {
-            if(this.structure[key].loader == "game") {
+            if (this.structure[key].loader == "game") {
                 this.loadFromGame(this.structure[key]);
-            } else if(this.structure[key].loader == "memory"){
+            } else if (this.structure[key].loader == "memory") {
                 this.loadFromMemory(this.structure[key]);
+            } else if (this.structure[key].loader == "rooms") {
+                this.loadRooms(this.structure[key]);
             } else {
                 console.log("Unknown loader for", JSON.stringify(this.structure[key]));
             }
         }
 
+        this.colony = new Colony(
+            this.structure.creeps.alive,
+            this.structure.structures.alive,
+            this.structure.rooms.alive
+        );
+
+        this.colony.announceDead(
+            this.structure.creeps.dead,
+            this.structure.structures.dead,
+            this.structure.rooms.dead
+        );
+    }
+
+    loadRooms(structure) {
+        let rooms = this.structure.rooms;
+        const createRoom = (name, alive) => {
+            let room = new structure.cls(
+                Object.assign({
+                        id: name
+                    },
+                    this.memory[structure.memory][name]
+                ),
+                Game[structure.memory][name]
+            );
+            rooms[alive ? "alive" : "dead"][name] = room;
+        };
+
+        ["creeps", "structures"].map(key => {
+            this.structure[key].alive.map(obj => {
+                if(!rooms.alive[obj.api.room.name]){
+                    createRoom(obj.api.room.name, true);
+                }
+                rooms.alive[obj.api.room.name]['assign' + key.charAt(0).toUpperCase() + key.slice(1)](obj);
+            });
+            this.structure[key].dead.map(obj => {
+                if(!rooms[obj.api.room.name]){
+                    createRoom(obj.api.room.name, false);
+                }
+            });
+        })
     }
 
     loadFromGame(structure) {
         for (let name in Game[structure.memory]) {
-            let id = Game[structure.memory][name].id;
-            let memoryId = DukeMemory.encodeId(Game[structure.memory][name].id);
+            let id = Game[structure.memory][name][structure.id];
+            let memoryId = DukeMemory.encodeId(Game[structure.memory][name][structure.id]);
             let obj = new structure.cls(
                 Object.assign({
                         id: id
                     },
                     this.memory[structure.memory][memoryId]
                 ),
-                structure.opts
+                Game[structure.memory][name]
             );
             if (obj.isAlive()) {
                 structure.alive.push(obj);
@@ -64,15 +120,15 @@ class TheDuke {
 
     loadFromMemory(structure) {
         for (let name in this.memory[structure.memory]) {
-            let id = this.memory[structure.memory][name].id;
-            let memoryId = DukeMemory.encodeId(this.memory[structure.memory][name].id);
+            let id = this.memory[structure.memory][name][structure.id];
+            let memoryId = DukeMemory.encodeId(this.memory[structure.memory][name][structure.id]);
             let obj = new structure.cls(
                 Object.assign({
                         id: id
                     },
                     this.memory[structure.memory][memoryId]
                 ),
-                structure.opts
+                false
             );
             if (obj.isAlive()) {
                 structure.alive.push(obj);
@@ -88,17 +144,12 @@ class TheDuke {
     }
 
     // Game Phases
-
     run() {
         if (Game.cpu.bucket > 9000) {
             Game.cpu.generatePixel();
         }
 
-        this.phase__init();
-    }
-
-    phase__init() {
-        // this.addTask(new Task({}));
+        this.colony.run();
     }
 
     end() {

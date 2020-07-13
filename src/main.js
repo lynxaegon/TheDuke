@@ -11,7 +11,7 @@ const initCache = require("utils.cache");
 global._ = require('lodash');
 global.DukeMemory = require('utils.memory');
 global.DukeObject = require('utils.DukeObject');
-global.Task = require('tasks.task');
+global.Colony = require('base.colony');
 global.nanoid = require('utils.nanoid');
 
 let SIMULATION = false;

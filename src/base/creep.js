@@ -1,6 +1,6 @@
 module.exports = class Creep extends DukeObject {
-    constructor(memory, opts) {
-        super(memory, opts);
+    constructor(memory, api) {
+        super(memory, api);
 
         this.name = memory.name || nanoid();
         this.oRoom = memory.oRoom || false;
@@ -11,6 +11,10 @@ module.exports = class Creep extends DukeObject {
             this.oRoom = this.oRoom || this.api.room.name;
             this.room = this.api.room.name;
         }
+    }
+
+    isFree() {
+        return !this.api.spawning;
     }
 
     dumpMemory() {
