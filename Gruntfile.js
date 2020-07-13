@@ -1,8 +1,8 @@
 module.exports = function(grunt) {
     require('time-grunt')(grunt);
 
-    var config = require('./credentials.json')
-    var currentdate = new Date();
+    let config = require('./credentials.json');
+    let currentdate = new Date();
 
     grunt.loadNpmTasks('grunt-screeps');
     grunt.loadNpmTasks('grunt-contrib-copy');
