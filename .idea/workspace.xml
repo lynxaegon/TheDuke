@@ -2,6 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="efad86a1-80d9-4c8c-bf4e-808068de7a62" name="Default" comment="me">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TheDuke.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TheDuke.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/creeps/creep.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/creeps/creep.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/structures/structure.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/structures/structure.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tasks/task.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/tasks/task.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/DukeObject.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DukeObject.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/memory.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/memory.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +76,7 @@
       <recent name="$PROJECT_DIR$/src/utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Grunt.js.Deploy Simulation">
+  <component name="RunManager" selected="Grunt.js.Deploy">
     <configuration name="Deploy Simulation" type="js.build_tools.grunt" singleton="false">
       <node-interpreter value="project" />
       <gruntfile value="$PROJECT_DIR$/Gruntfile.js" />
@@ -109,7 +116,7 @@
       <workItem from="1551691050599" duration="47142000" />
       <workItem from="1557833638890" duration="19000" />
       <workItem from="1594491510204" duration="13168000" />
-      <workItem from="1594564323308" duration="22007000" />
+      <workItem from="1594564323308" duration="29920000" />
     </task>
     <servers />
   </component>
@@ -117,22 +124,50 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1594655360069">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594655360069" />
     <state x="348" y="326" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1594503113247">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="348" y="326" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1594503113247" />
-    <state x="379" y="278" key="FileChooserDialogImpl" timestamp="1594496899967">
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1594659470764">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="379" y="278" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1594496899967" />
-    <state x="93" y="100" width="1012" height="847" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1594601453547">
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594659470764" />
+    <state x="379" y="278" key="FileChooserDialogImpl" timestamp="1594655356366">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="93" y="100" width="1012" height="847" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594601453547" />
-    <state x="1136" y="252" width="737" height="606" key="find.popup" timestamp="1594645150602">
+    <state x="379" y="278" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1594655356366" />
+    <state width="1899" height="204" key="GridCell.Tab.0.bottom" timestamp="1594655343243">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1136" y="252" width="737" height="606" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1594645150602" />
+    <state width="1899" height="204" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594655343243" />
+    <state width="1899" height="204" key="GridCell.Tab.0.center" timestamp="1594655343243">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="204" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594655343243" />
+    <state width="1899" height="204" key="GridCell.Tab.0.left" timestamp="1594655343243">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="204" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594655343243" />
+    <state width="1899" height="204" key="GridCell.Tab.0.right" timestamp="1594655343243">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="204" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594655343243" />
+    <state x="163" y="79" width="1736" height="856" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1594659470764">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="163" y="79" width="1736" height="856" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594659470764" />
+    <state x="93" y="100" width="1012" height="847" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1594659470764">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="93" y="100" width="1012" height="847" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594659470764" />
+    <state x="1136" y="252" width="737" height="606" key="find.popup" timestamp="1594660701872">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1136" y="252" width="737" height="606" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1594660701872" />
     <state x="269" y="229" width="672" height="678" key="search.everywhere.popup" timestamp="1594645353498">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

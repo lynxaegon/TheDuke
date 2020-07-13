@@ -9,42 +9,66 @@ function generatePID() {
     return pid;
 }
 
-module.exports = class Task {
-    static get PRIORITY_NORMAL() {
-        return 0;
+module.exports = class Task extends DukeObject {
+    config() {
+        return {
+            name: "BasicTask",
+            type: 0,
+            assigned: [],
+            states: {}
+        }
     }
 
-    constructor(options) {
-        if (!options.pid) {
-            let count = 0;
-            while (true) {
-                count++;
-                options.pid = generatePID();
-                if (!Memory.tasks[pid])
-                    break;
-                if (count > MAX_PID) {
-                    throw new Error("Could not find free pid! Cannot execute task", JSON.stringify(options));
-                }
+    constructor(memory, opts) {
+        super(memory, opts);
+
+        this.alive = false;
+
+        this.id = memory.id || this.findFreePID();
+        this.assigned = memory.assigned;
+        for (let key in this.assigned) {
+            this.assigned[key] = DukeObject.findById(this.assigned[key]);
+            if (!this.assigned[key].isAlive()) {
+                console.log("[Task]", key, " died!");
             }
         }
 
-        this.options = Object.assign({
-            pid: 0,
-            name: "",
-            rules: [],
-            priority: Task.PRIORITY_NORMAL,
-        }, options);
-    }
-
-    init() {
-        if (!Memory.tasks[this.options.pid]) {
-            Memory.tasks[this.options.pid] = {};
+        if (this.id < 0) {
+            throw new Error("Invalid pid! '" + this.id + "'")
         }
 
-        this.memory = Memory.tasks[this.options.pid];
+        this.alive = true;
     }
 
-    end() {
-        delete Memory.tasks[this.options.pid];
+    isAlive() {
+        return false;
+        return this.alive;
+    }
+
+    next(stateID) {
+
+    }
+
+    findFreePID() {
+        let count = 0;
+        while (true) {
+            count++;
+            pid = generatePID();
+            if (DukeMemory.isPIDFree(pid)) {
+                console.log("Found pid in", count, "counts", "pid", pid);
+                return pid;
+            }
+            if (count > MAX_PID) {
+                console.log("PID Not found in", count, "counts");
+                break;
+            }
+        }
+        return -1;
+    }
+
+    dumpMemory() {
+        let result = super.dumpMemory();
+        result.id = this.id;
+        return Object.assign(result, this.config());
     }
 };

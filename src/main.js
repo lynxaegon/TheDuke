@@ -10,6 +10,8 @@ const initCache = require("utils.cache");
 
 global._ = require('lodash');
 global.DukeMemory = require('utils.memory');
+global.DukeObject = require('utils.DukeObject');
+global.Task = require('tasks.task');
 global.nanoid = require('utils.nanoid');
 
 let SIMULATION = false;

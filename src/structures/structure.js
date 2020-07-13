@@ -1,8 +1,6 @@
-const DukeObject = require('utils.DukeObject');
-
 module.exports = class Structure extends DukeObject {
-    constructor(memory) {
-        super(memory);
+    constructor(memory, opts) {
+        super(memory, opts);
 
         this.type = memory.type || false;
         this.room = memory.room || false;

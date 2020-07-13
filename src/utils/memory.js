@@ -30,22 +30,28 @@ class DukeMemory {
         global.Cache = initCache(this.state.cache);
     }
 
-    encodeId(s){
+    isPIDFree(pid) {
+        return !!this.state.tasks[pid] == false ? true : false;
+    }
+
+    encodeId(s) {
         return s;
         // 5bbcab5f9099fc012e63362b -> 宼ꭟ邙ﰁ⹣㘫
-        return s.split("-").map(function(a,b,c){
-            return a.split(/(\w{4})/).filter(Boolean).map(function(aa,bb,cc){
-                return  String.fromCharCode(parseInt(aa, 16))
+        return s.split("-").map(function (a, b, c) {
+            return a.split(/(\w{4})/).filter(Boolean).map(function (aa, bb, cc) {
+                return String.fromCharCode(parseInt(aa, 16))
             }).join("");
         }).join("|");
     }
 
 
-    decodeId(s){
+    decodeId(s) {
         return s;
         // 宼ꭟ邙ﰁ⹣㘫 -> 5bbcab5f9099fc012e63362b
-        return s.split("|").map(function(a){
-            return a.split("").map(function(aa){return String("0"+aa.charCodeAt(0).toString(16)).slice(-4) }).join("")
+        return s.split("|").map(function (a) {
+            return a.split("").map(function (aa) {
+                return String("0" + aa.charCodeAt(0).toString(16)).slice(-4)
+            }).join("")
         }).join("-");
     }
 

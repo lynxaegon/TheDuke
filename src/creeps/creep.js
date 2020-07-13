@@ -1,8 +1,6 @@
-const DukeObject = require('utils.DukeObject');
-
 module.exports = class Creep extends DukeObject {
-    constructor(memory) {
-        super(memory);
+    constructor(memory, opts) {
+        super(memory, opts);
 
         this.name = memory.name || nanoid();
         this.oRoom = memory.oRoom || false;
