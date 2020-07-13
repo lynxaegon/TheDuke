@@ -2,34 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="efad86a1-80d9-4c8c-bf4e-808068de7a62" name="Default" comment="me">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gruntfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/Gruntfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TheDuke.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TheDuke.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/colony/config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/colony/room.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/basic.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/creepTask.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/factory.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/roles/attacker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/roles/harvester.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/roles/upgrader.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/roles/wanderer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/tasks/attack.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/tasks/basicTask.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/tasks/harvest.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/tasks/idle.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/tasks/moveToTarget.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/tasks/moveXY.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/tasks/transfer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/creeps/tasks/upgradeController.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/cache.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/cache.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/logger.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/logger.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/memory.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/nanoid.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/nanoid.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/profiler.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/memory.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/memory.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +109,7 @@
       <workItem from="1551691050599" duration="47142000" />
       <workItem from="1557833638890" duration="19000" />
       <workItem from="1594491510204" duration="13168000" />
-      <workItem from="1594564323308" duration="21267000" />
+      <workItem from="1594564323308" duration="22007000" />
     </task>
     <servers />
   </component>

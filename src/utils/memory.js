@@ -6,6 +6,7 @@ class DukeMemory {
     }
 
     loadState(initCache) {
+        // noinspection JSAnnotator
         delete global.Memory;
         this.state = RawMemory.get();
         this.state = JSON.parse(this.state);
