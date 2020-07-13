@@ -17,7 +17,8 @@ module.exports = class Colony {
     }
 
     run() {
-        for(let room of this.rooms) {
+        for(let room in this.rooms) {
+            room = this.rooms[room];
             room.run(this);
         }
     }

@@ -11,6 +11,14 @@ module.exports = class Structure extends DukeObject {
         }
     }
 
+    getResource(resource) {
+        return this.api.store[resource] || 0;
+    }
+
+    getResourceCapacity(resource) {
+        return this.api.store.getCapacity(resource) || 0;
+    }
+
     dumpMemory() {
         let result = super.dumpMemory();
         return Object.assign(result, {
