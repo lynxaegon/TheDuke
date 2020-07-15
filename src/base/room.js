@@ -73,8 +73,7 @@ module.exports = class Room extends DukeObject {
     }
 
     dumpMemory() {
-        let result = super.dumpMemory();
-        return Object.assign(result, {});
+        return Object.assign(super.dumpMemory(), {});
     }
 
     // functions

@@ -1,8 +1,8 @@
-const Creep = require("base.creep");
-const Structure = require("base.structure");
-const Room = require("base.room");
-const Task = require('base.task');
-const Colony = require('base.colony');
+const DukeCreep = require("base.creep");
+const DukeStructure = require("base.structure");
+const DukeRoom = require("base.room");
+const DukeTask = require('base.task');
+const DukeColony = require('base.colony');
 
 class TheDuke {
     init(memory) {
@@ -13,7 +13,7 @@ class TheDuke {
             creeps: {
                 id: "id",
                 loader: "game",
-                cls: Creep,
+                cls: DukeCreep,
                 memory: "creeps",
                 alive: [],
                 dead: []
@@ -21,7 +21,7 @@ class TheDuke {
             structures: {
                 id: "id",
                 loader: "game",
-                cls: Structure,
+                cls: DukeStructure,
                 memory: "structures",
                 alive: [],
                 dead: []
@@ -29,7 +29,7 @@ class TheDuke {
             tasks: {
                 id: "id",
                 loader: "memory",
-                cls: Task,
+                cls: DukeTask,
                 memory: "tasks",
                 alive: [],
                 dead: []
@@ -37,7 +37,7 @@ class TheDuke {
             rooms: {
                 id: "name",
                 loader: "rooms",
-                cls: Room,
+                cls: DukeRoom,
                 memory: "rooms",
                 alive: [],
                 dead: []
@@ -56,7 +56,7 @@ class TheDuke {
             }
         }
 
-        this.colony = new Colony(
+        this.colony = new DukeColony(
             this.structure.creeps.alive,
             this.structure.structures.alive,
             this.structure.rooms.alive
