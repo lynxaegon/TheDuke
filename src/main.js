@@ -25,7 +25,8 @@ if (!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
 }
 
 const _TheDuke = require('TheDuke');
-module.exports.loop = function() {
+
+module.exports.loop = () => {
     if(SIMULATION){
         Game.cpu.limit = 20;
         Game.cpu.tickLimit = 500;

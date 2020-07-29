@@ -14,6 +14,13 @@ class Cache {
     return !!this._cache[key];
   }
 
+  retrieve(key, fn) {
+	  if (!this.has(key)) {
+		  this.set(key, fn());
+	  }
+	  return this.get(key);
+  }
+
   gc() {
     this._cache = {};
   }

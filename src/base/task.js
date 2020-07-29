@@ -29,6 +29,7 @@ module.exports = class Task extends DukeObject {
         for (let key in this.assigned) {
             this.assigned[key] = DukeObject.findById(this.assigned[key]);
             if (!this.assigned[key].isAlive()) {
+				delete this.assigned[key];
                 console.log("[Task]", key, " died!");
             }
         }
