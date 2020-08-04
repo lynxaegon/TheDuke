@@ -1,4 +1,11 @@
 const DBVersion = 2;
+let HEAP = false;
+
+// TODO: check if we should enable
+// minor optimization atm (0.03 cpu)
+let FEATURE_ENABLED__USE_HEAP_IF_POSSIBLE = false;
+
+let TICK_FLAGS = {};
 
 class DukeMemory {
     constructor() {
@@ -6,6 +13,21 @@ class DukeMemory {
     }
 
     loadState(initCache) {
+        if(FEATURE_ENABLED__USE_HEAP_IF_POSSIBLE){
+            if(!HEAP) {
+                console.log(" ==== HEAP CLEARED ==== ");
+                this.__loadState(initCache);
+            } else {
+                console.log(" ==== USING HEAP ==== ");
+            }
+        }
+        else {
+            console.log(" ==== HEAP FEATURE DISABLED ==== ");
+            this.__loadState(initCache);
+        }
+    }
+
+    __loadState(initCache) {
         // noinspection JSAnnotator
         delete global.Memory;
         this.state = RawMemory.get();
@@ -28,7 +50,14 @@ class DukeMemory {
             this.state.cache = {};
         }
 
+        if(TICK_FLAGS.clearCache){
+            this.state.cache = {};
+            delete TICK_FLAGS.clearCache;
+            console.log("======= cache cleared!");
+        }
+
         global.Cache = initCache(this.state.cache);
+        HEAP = true;
     }
 
     isPIDFree(pid) {
@@ -58,6 +87,10 @@ class DukeMemory {
 
     saveState() {
         RawMemory.set(JSON.stringify(this.state));
+    }
+
+    clearCache() {
+        TICK_FLAGS.clearCache = true;
     }
 }
 

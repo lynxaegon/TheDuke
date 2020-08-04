@@ -1,71 +1,120 @@
 const DukeTask = require('base.task');
 
 module.exports = class Task extends DukeTask {
+	static getTaskName() {
+		return "BasicHarvest";
+	}
+
+	static getTaskType() {
+		return "BASIC_HARVEST";
+	}
+
 	config() {
+		return Object.assign(super.config(), {
+			name: Task.getTaskName(),
+			type: Task.getTaskType()
+		});
+	}
+
+	getRequirements() {
+		let sources = this.room.find(DukeRoom.FIND_TYPE.ENERGY_SOURCE);
+		let maxHarvesters = 0;
+
+		for(let sourceId in sources) {
+			maxHarvesters += sources[sourceId].max;
+		}
+
+		return Object.assign(super.getRequirements(), [{
+			parts: [DukeCreep.PARTS.MOVE, DukeCreep.PARTS.CARRY, DukeCreep.PARTS.WORK],
+			count: maxHarvesters - this.assigned.length
+		}]);
+	}
+
+	stateStart(creep, state) {
+
+	}
+
+	stateDone(creep, state) {
+
+	}
+
+	stateError(creep, state) {
+
+	}
+
+	/***
+	 *
+	 * @param {DukeCreep} creep
+	 * @returns object
+	 */
+	fsm(creep) {
 		return {
-			name: "BasicHarvest",
-			type: 0,
-			assigned: [],
-			config: {
-				targets: [(room) => {
-					room.find
-				}]
-			},
-			states: {}
-		}
-	}
-
-	constructor(memory, api) {
-		super(memory, api);
-
-		this.alive = false;
-
-		this.id = memory.id || this.findFreePID();
-		this.assigned = memory.assigned;
-		for (let key in this.assigned) {
-			this.assigned[key] = DukeObject.findById(this.assigned[key]);
-			if (!this.assigned[key].isAlive()) {
-				delete this.assigned[key];
-				console.log("[Task]", key, " died!");
+			init: "findEnergySources",
+			states: {
+				"findEnergySources": {
+					action: creep.getEnergySource,
+					onSuccess: {
+						next: "moveToSource",
+						continue: true,
+					},
+					onFail: {
+						next: "findSources"
+					}
+				},
+				"moveToSource": {
+					action: creep.moveToTarget,
+					params: [creep.taskMemory.source],
+					onSuccess: {
+						next: "harvest",
+						continue: true
+					}
+				},
+				"harvest": {
+					action: creep.harvest,
+					onSuccess: {
+						next: "isFull",
+						continue: true
+					}
+				},
+				"isFull": {
+					action: creep.isFull,
+					params: [RESOURCE_ENERGY],
+					onSuccess: {
+						next: "moveToSpawn",
+						continue: true
+					},
+					onFail: {
+						next: "harvest"
+					}
+				},
+				"findEnergyStores": {
+					action: creep.getEnergyStore,
+					onSuccess: {
+						next: "moveToStore",
+						continue: true
+					},
+					onFail: {
+						next: "findEnergyStores"
+					}
+				},
+				"moveToStore": {
+					action: creep.moveToTarget,
+					params: [creep.taskMemory.store],
+					onSuccess: {
+						next: "transfer",
+						continue: true
+					}
+				},
+				"transfer": {
+					action: creep.transfer,
+					params: [creep.taskMemory.store, RESOURCE_ENERGY],
+					onSuccess: {
+						next: "moveToSource",
+						continue: true
+					}
+				}
 			}
 		}
 
-		if (this.id < 0) {
-			throw new Error("Invalid pid! '" + this.id + "'")
-		}
-
-		this.alive = true;
-	}
-
-	isAlive() {
-		return false;
-		return this.alive;
-	}
-
-	next(stateID) {
-
-	}
-
-	findFreePID() {
-		let count = 0;
-		while (true) {
-			count++;
-			pid = generatePID();
-			if (DukeMemory.isPIDFree(pid)) {
-				console.log("Found pid in", count, "counts", "pid", pid);
-				return pid;
-			}
-			if (count > MAX_PID) {
-				console.log("PID Not found in", count, "counts");
-				break;
-			}
-		}
-		return -1;
-	}
-
-	dumpMemory() {
-		let result = super.dumpMemory();
-		result.id = this.id;
-		return Object.assign(result, this.config());
 	}
 };

@@ -9,28 +9,46 @@ function generatePID() {
     return pid;
 }
 
-module.exports = class Task extends DukeObject {
+module.exports = class DukeTask extends DukeObject {
+    static getTaskName() {
+        return "UndefinedTaskName";
+    }
+
+    static getTaskType() {
+        return "UndefinedTaskType";
+    }
+
     config() {
         return {
-            name: "BasicTask",
-            type: 0,
-            assigned: [],
-            states: {}
+            name: DukeTask.getTaskName(),
+            type: DukeTask.getTaskType(),
+            assigned: []
         }
     }
 
-    constructor(memory, api) {
-        super(memory, api);
+    constructor(memory, room) {
+        super(memory, {
+            room: {
+                name: memory.room || room
+            }
+        });
 
         this.alive = false;
 
         this.id = memory.id || this.findFreePID();
-        this.assigned = memory.assigned;
+
+        // will be changed to room object after task is assigned to room
+        /** @type {{name: string}|DukeRoom} */
+        this.room = memory.room || room;
+
+        this.assigned = memory.assigned || [];
         for (let key in this.assigned) {
             this.assigned[key] = DukeObject.findById(this.assigned[key]);
             if (!this.assigned[key].isAlive()) {
-				delete this.assigned[key];
-                console.log("[Task]", key, " died!");
+                delete this.assigned[key];
+                console.log("[Task]", "["+ Task.getTaskName() +"]", key, " died!");
+            } else {
+                this.assigned[key].setTask(this, true);
             }
         }
 
@@ -41,13 +59,12 @@ module.exports = class Task extends DukeObject {
         this.alive = true;
     }
 
-    isAlive() {
-        return false;
-        return this.alive;
+    getRequirements() {
+        return [];
     }
 
-    next(stateID) {
-
+    isAlive() {
+        return this.alive;
     }
 
     findFreePID() {
@@ -70,6 +87,11 @@ module.exports = class Task extends DukeObject {
     dumpMemory() {
         let result = super.dumpMemory();
         result.id = this.id;
+        result.room = this.room.id;
         return Object.assign(result, this.config());
     }
 };
+
+module.exports.TASK_ERROR = -1;
+module.exports.TASK_CONTINUE = 1;
+module.exports.TASK_DONE = 0;

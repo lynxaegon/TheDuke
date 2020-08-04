@@ -1,5 +1,4 @@
-// usefull
-/**\
+/**
  * OBSTACLE_OBJECT_TYPES:
  * ["spawn", "creep", "powerCreep", "source", "mineral",
  *  "deposit", "controller", "constructedWall", "extension",
@@ -7,22 +6,29 @@
  *  "powerBank", "lab", "terminal", "nuker", "factory",
  *  "invaderCore"],
  */
+let tasks = {
+	harvest: DukeColony.getTasks()['BASIC_HARVEST']['BasicHarvest']
+};
+// const STATES = {};
 
-const STATES = {};
+// STATES[Colony.STATE_] = {};
 
-STATES[Colony.STATE_GROW] = {};
-
-module.exports = class Room extends DukeObject {
+module.exports = class DukeRoom extends DukeObject {
 	constructor(memory, api) {
 		super(memory, api);
 
 		this.spawns = [];
 		this.controller = false;
 		this.others = [];
+		/** @type {DukeTask[]} **/
+		this.tasks = [];
+		this.colony = false;
 
 		this.creeps = [];
+	}
 
-		this.stateConfig = {};
+	assignColony(colony) {
+		this.colony = colony;
 	}
 
 	/**
@@ -30,6 +36,7 @@ module.exports = class Room extends DukeObject {
 	 * @param creep
 	 */
 	assignCreeps(creep) {
+		creep.room = this;
 		this.creeps.push(creep);
 	}
 
@@ -53,69 +60,98 @@ module.exports = class Room extends DukeObject {
 		}
 	}
 
-	run(colony) {
-		this.stateConfig = STATES[colony.state];
+	/**
+	 * accessed via "Reflection"
+	 * @param task
+	 */
+	assignTasks(task) {
+		task.room = this;
+		this.tasks.push(task);
+	}
+
+	run() {
 		this.runState();
 	}
 
 	runState() {
 		this._checkEconomy();
 		this._updateTasks();
-		// this.checkTasks();
-		// this.createNewTasks();
-		// this.executeTasks();
-		// this.finalizeTasks();
+		this._processTasks();
+		this._executeTasks();
+		this._finalizeTasks();
 	}
 
 	_checkEconomy() {
-		console.log("Energy:", this.getEnergy(), "/", this.getEnergyCapacity());
+		// console.log(JSON.stringify(this.find(Room.FIND_TYPE.ENERGY_SOURCE)));
 	}
 
 	_updateTasks() {
-		console.log(JSON.stringify(this.find("ENERGY_SOURCE")));
-		// console.log(this.trace());
-		// console.log(getRoomHex());
-	}
+		let harvestTask = this.tasks.find(t => t.config().type == "BASIC_HARVEST");
 
-	/*
-	getRoomHex() {
-		let lookupTable = {
-			'0': '0000', '1': '0001', '2': '0010', '3': '0011', '4': '0100',
-			'5': '0101', '6': '0110', '7': '0111', '8': '1000', '9': '1001',
-			'a': '1010', 'b': '1011', 'c': '1100', 'd': '1101',
-			'e': '1110', 'f': '1111',
-			'A': '1010', 'B': '1011', 'C': '1100', 'D': '1101',
-			'E': '1110', 'F': '1111'
-		};
-		let invertedLookupTable = {
-			'0000': '0',
-
-		};
-		let string = "";
-		let roomMap = this.api.lookAtArea(0, 0, 49, 49, true);
-		let acc = "";
-		for (let i = 0; i < roomMap.length; i++) {
-			for (let j = 0; j < roomMap[j].length; j++) {
-				acc += LOOK_
-			}
+		if(!harvestTask)
+		{
+			TheDuke.addTask(new tasks.harvest({}, this.id));
 		}
 	}
-	*/
+
+	_processTasks() {
+		// TODO: check task requirements and try to meet them
+		for(let t of this.tasks) {
+			console.log("Requirements", JSON.stringify(t.getRequirements()));
+		}
+	}
+
+	_executeTasks() {
+		// TODO: execute all tasks (maybe via priority)
+	}
+
+	_finalizeTasks() {
+		// TODO: dunno what to do here :D (yet)
+	}
 
 	find(type) {
-		if (type == "ENERGY_SOURCE") {
-			return Cache.disk.retrieve("Room/" + this.id + ".find/type:" + type, () => {
-				return this.api.find(FIND_SOURCES).map(o => o.id);
+		if (type == DukeRoom.FIND_TYPE.ENERGY_SOURCE) {
+			let cacheKey = "Room/" + this.id + ".find/type:" + type;
+			return Cache.tick.retrieve(cacheKey, () => {
+				let sources = Cache.disk.retrieve(cacheKey, () => {
+					let sources = this.api.find(FIND_SOURCES);
+					sources = sources.reduce(function (acc, val, i) {
+						acc[val.id] = {max: 2};
+						return acc;
+					}, {});
+					return sources;
+				});
+
+				let tickData = {};
+				for(let source in sources) {
+					tickData[source] = Object.assign({current : 0}, sources[source]);
+				}
+
+				return tickData;
 			});
 		}
 		return null;
 	}
 
-	dumpMemory() {
-		return Object.assign(super.dumpMemory(), {});
+	getFreeSource(occupy) {
+		let sources = this.find(DukeRoom.FIND_TYPE.ENERGY_SOURCE);
+		for(let source in sources) {
+			if(sources[source].current < sources[source].max) {
+				sources[source].current += occupy ? 1 : 0;
+				return source;
+			}
+		}
+
+		return false;
 	}
 
-	// functions
+	dumpMemory() {
+		return Object.assign(super.dumpMemory(), {
+			id: this.id
+		});
+	}
+
+	// API
 	getEnergy() {
 		return this.spawns.reduce((acc, obj) => {
 			return acc + obj.getResource(RESOURCE_ENERGY);
@@ -127,4 +163,13 @@ module.exports = class Room extends DukeObject {
 			return acc + obj.getResourceCapacity(RESOURCE_ENERGY);
 		}, 0);
 	}
+
+	getUpkeep() {
+		let sources = this.find(DukeRoom.FIND_TYPE.ENERGY_SOURCE);
+		return  2 * sources.length;
+	}
+};
+
+module.exports.FIND_TYPE = {
+	ENERGY_SOURCE: 1
 };

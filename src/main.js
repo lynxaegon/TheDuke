@@ -5,6 +5,7 @@ screeps.space - The Duke (testing phase)
 */
 
 require('version');
+
 const injectLogger = require('utils.logger');
 const initCache = require("utils.cache");
 
@@ -14,8 +15,9 @@ global.DukeObject = require('utils.DukeObject');
 global.Colony = require('base.colony');
 global.nanoid = require('utils.nanoid');
 
+
 let SIMULATION = false;
-if(global.navigator){
+if (global.navigator) {
     SIMULATION = true;
 }
 
@@ -27,7 +29,7 @@ if (!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
 const _TheDuke = require('TheDuke');
 
 module.exports.loop = () => {
-    if(SIMULATION){
+    if (SIMULATION) {
         Game.cpu.limit = 20;
         Game.cpu.tickLimit = 500;
         Game.cpu.bucket = 1000;
@@ -47,12 +49,12 @@ module.exports.loop = () => {
     DukeMemory.saveState();
 
     if (typeof Game.cpu.getHeapStatistics === "function") {
-    	let heapStats = Game.cpu.getHeapStatistics();
-    	if(heapStats) {
+        let heapStats = Game.cpu.getHeapStatistics();
+        if (heapStats) {
             let heapPercent = Math.round(((heapStats.total_heap_size + heapStats.externally_allocated_size) / heapStats.heap_size_limit) * 100);
             console.log("------ MEM: heap usage:", Math.round((heapStats.total_heap_size) / 1048576), "MB +", Math.round((heapStats.externally_allocated_size) / 1048576), "MB of", Math.round(heapStats.heap_size_limit / 1048576), "MB (", heapPercent, "% )");
         }
     }
 
-    console.log("--===---------- Loop Ended (used cpu: " + Game.cpu.getUsed() + "/" + Game.cpu.limit + " (" + Game.cpu.tickLimit + "))----------===--");
+    console.log("--===---------- Loop Ended (used cpu: " + Game.cpu.getUsed().toFixed(2) + "/" + Game.cpu.limit + " (" + Game.cpu.tickLimit + "))----------===--");
 };

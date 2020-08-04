@@ -1,8 +1,37 @@
-const DukeCreep = require("base.creep");
-const DukeStructure = require("base.structure");
-const DukeRoom = require("base.room");
-const DukeTask = require('base.task');
-const DukeColony = require('base.colony');
+global.WorldPosition = require("3rdparty.worldPosition");
+
+global.DukeColony = require('base.colony');
+global.DukeTask = require('base.task');
+global.DukeCreep = require("base.creep");
+global.DukeStructure = require("base.structure");
+global.DukeRoom = require("base.room");
+
+class DukeTaskFactory {
+    constructor(memory, api) {
+        let taskName = memory.name;
+        let taskType = memory.type;
+
+        let taskCls = DukeColony.getTasks();
+        if (!taskCls[taskType]) {
+            taskCls = new DukeTask(memory, false);
+            taskCls.alive = false;
+            console.log("Invalid task", taskType);
+            return taskCls;
+        }
+        if (!taskCls[taskType][taskName]) {
+            console.log("Invalid task", taskType, taskName);
+            taskCls = new DukeTask(memory, false);
+            taskCls.alive = false;
+            return taskCls;
+        }
+
+        // taskCls = new DukeTask(memory, false);
+        // taskCls.alive = false;
+        // return taskCls;
+
+        return new (DukeColony.getTasks()[taskType][taskName])(memory, api);
+    }
+}
 
 class TheDuke {
     init(memory) {
@@ -29,10 +58,10 @@ class TheDuke {
             tasks: {
                 id: "id",
                 loader: "memory",
-                cls: DukeTask,
+                cls: DukeTaskFactory,
                 memory: "tasks",
                 alive: [],
-                dead: []
+                dead: [],
             },
             rooms: {
                 id: "name",
@@ -59,7 +88,8 @@ class TheDuke {
         this.colony = new DukeColony(
             this.structure.creeps.alive,
             this.structure.structures.alive,
-            this.structure.rooms.alive
+            this.structure.rooms.alive,
+            this.structure.tasks.alive
         );
 
         this.colony.announceDead(
@@ -83,19 +113,19 @@ class TheDuke {
             rooms[alive ? "alive" : "dead"][name] = room;
         };
 
-        ["creeps", "structures"].map(key => {
+        ["creeps", "structures", "tasks"].map(key => {
             this.structure[key].alive.map(obj => {
-                if(!rooms.alive[obj.api.room.name]){
+                if (!rooms.alive[obj.api.room.name]) {
                     createRoom(obj.api.room.name, true);
                 }
                 rooms.alive[obj.api.room.name]['assign' + key.charAt(0).toUpperCase() + key.slice(1)](obj);
             });
             this.structure[key].dead.map(obj => {
-                if(!rooms[obj.api.room.name]){
+                if (!rooms[obj.api.room.name]) {
                     createRoom(obj.api.room.name, false);
                 }
             });
-        })
+        });
     }
 
     loadFromGame(structure) {
@@ -140,6 +170,7 @@ class TheDuke {
 
     addTask(task) {
         this.structure.tasks.alive[task.id] = task;
+        this.structure.rooms.alive[task.api.room.name].assignTasks(task);
         return this;
     }
 
@@ -158,6 +189,7 @@ class TheDuke {
                 let obj = this.structure[key];
                 this.memory[obj.memory][obj.alive[i].id] = obj.alive[i].dumpMemory();
             }
+
             for (let i in this.structure[key].dead) {
                 let obj = this.structure[key];
                 delete this.memory[obj.memory][obj.dead[i].id];
