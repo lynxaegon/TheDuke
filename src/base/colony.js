@@ -24,7 +24,7 @@ module.exports = class Colony {
         this.rooms = rooms;
         this.tasks = tasks;
 
-        this.state = Colony.STATE_GROW;
+        this.state = DukeColony.STATE_GROW;
     }
 
     announceDead(creeps, structures, rooms) {

@@ -12,7 +12,6 @@ const initCache = require("utils.cache");
 global._ = require('lodash');
 global.DukeMemory = require('utils.memory');
 global.DukeObject = require('utils.DukeObject');
-global.Colony = require('base.colony');
 global.nanoid = require('utils.nanoid');
 
 
