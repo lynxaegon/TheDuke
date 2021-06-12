@@ -26,17 +26,19 @@ module.exports = class DukeTask extends DukeObject {
         }
     }
 
-    constructor(memory, room) {
+    constructor(memory, room, rules) {
         super(memory, {
             room: {
                 name: memory.room || room
             }
         });
+        rules = rules || {};
 
         this.alive = false;
 
         this.id = memory.id || this.findFreePID();
-
+        this.extraRules = memory.rules || rules;
+        this.params = memory.params || {};
         // will be changed to room object after task is assigned to room
         /** @type {{name: string}|DukeRoom} */
         this.room = memory.room || room;
@@ -46,7 +48,7 @@ module.exports = class DukeTask extends DukeObject {
             this.assigned[key] = DukeObject.findById(this.assigned[key]);
             if (!this.assigned[key].isAlive()) {
                 delete this.assigned[key];
-                console.log("[Task]", "["+ Task.getTaskName() +"]", key, " died!");
+                console.log("[Task]", "["+ DukeTask.getTaskName() +"]", key, " died!");
             } else {
                 this.assigned[key].setTask(this, true);
             }
@@ -56,15 +58,24 @@ module.exports = class DukeTask extends DukeObject {
             throw new Error("Invalid pid! '" + this.id + "'")
         }
 
+        this._finished = false;
         this.alive = true;
     }
 
-    getRequirements() {
-        return [];
+    rules() {
+        return {};
     }
 
     isAlive() {
         return this.alive;
+    }
+
+    isDone() {
+        return this._finished;
+    }
+
+    finish() {
+        this._finished = true;
     }
 
     findFreePID() {
@@ -88,6 +99,8 @@ module.exports = class DukeTask extends DukeObject {
         let result = super.dumpMemory();
         result.id = this.id;
         result.room = this.room.id;
+        result.rules = this.extraRules;
+        result.params = this.params;
         return Object.assign(result, this.config());
     }
 };

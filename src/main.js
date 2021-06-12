@@ -25,7 +25,7 @@ if (!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
     console.log('New code version: ', SCRIPT_VERSION);
 }
 
-const _TheDuke = require('TheDuke');
+// const _TheDuke = require('TheDuke');
 
 module.exports.loop = () => {
     if (SIMULATION) {

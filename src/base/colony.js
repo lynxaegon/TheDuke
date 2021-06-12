@@ -1,5 +1,6 @@
 const availableTasks = [
-    require("tasks.task.basic_harvest")
+    require("tasks.task.basic_harvest"),
+    require("tasks.task.spawn_creep")
 ];
 const tasks = {};
 for(let t of availableTasks) {

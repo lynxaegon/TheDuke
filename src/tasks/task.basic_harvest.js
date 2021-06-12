@@ -16,7 +16,7 @@ module.exports = class Task extends DukeTask {
 		});
 	}
 
-	getRequirements() {
+	rules() {
 		let sources = this.room.find(DukeRoom.FIND_TYPE.ENERGY_SOURCE);
 		let maxHarvesters = 0;
 
@@ -24,10 +24,20 @@ module.exports = class Task extends DukeTask {
 			maxHarvesters += sources[sourceId].max;
 		}
 
-		return Object.assign(super.getRequirements(), [{
-			parts: [DukeCreep.PARTS.MOVE, DukeCreep.PARTS.CARRY, DukeCreep.PARTS.WORK],
-			count: maxHarvesters - this.assigned.length
-		}]);
+		// TODO: remove
+		maxHarvesters = 1;
+
+		return {
+			required: {
+				creeps: [
+					{
+						type: [DukeCreep.PARTS.MOVE, DukeCreep.PARTS.CARRY, DukeCreep.PARTS.WORK],
+						now: this.assigned.length,
+						max: maxHarvesters - this.assigned.length
+					}
+				]
+			}
+		};
 	}
 
 	stateStart(creep, state) {
