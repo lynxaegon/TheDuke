@@ -51,8 +51,13 @@ module.exports = class Task extends DukeTask {
             init: "spawn",
             states: {
                 "spawn": {
-                    action: structure.api.spawnCreep,
-                    params: [this.memory.params.parts],
+                    action: (body, name) => {
+                        if(structure.api.spawnCreep(body, name) == OK) {
+                            return DukeTask.TASK_DONE;
+                        }
+                        return DukeTask.TASK_ERROR;
+                    },
+                    params: [this.params.parts, nanoid()],
                     onSuccess: {
                         next: "wait"
                     }
@@ -62,7 +67,7 @@ module.exports = class Task extends DukeTask {
                         return !!structure.spawning;
                     },
                     onSuccess: {
-                        next: this.finish
+                        next: null
                     }
                 }
             }

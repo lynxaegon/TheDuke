@@ -40,18 +40,6 @@ module.exports = class Task extends DukeTask {
 		};
 	}
 
-	stateStart(creep, state) {
-
-	}
-
-	stateDone(creep, state) {
-
-	}
-
-	stateError(creep, state) {
-
-	}
-
 	/***
 	 *
 	 * @param {DukeCreep} creep
@@ -65,7 +53,7 @@ module.exports = class Task extends DukeTask {
 					action: creep.getEnergySource,
 					onSuccess: {
 						next: "moveToSource",
-						continue: true,
+						continue: true
 					},
 					onFail: {
 						next: "findSources"

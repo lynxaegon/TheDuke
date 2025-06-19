@@ -12,6 +12,7 @@ const initCache = require("utils.cache");
 global._ = require('lodash');
 global.DukeMemory = require('utils.memory');
 global.DukeObject = require('utils.DukeObject');
+global.DukeObjectTaskExecutor = require('utils.DukeObjectTaskExecutor');
 global.nanoid = require('utils.nanoid');
 
 
@@ -25,7 +26,7 @@ if (!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
     console.log('New code version: ', SCRIPT_VERSION);
 }
 
-// const _TheDuke = require('TheDuke');
+const _TheDuke = require('TheDuke');
 
 module.exports.loop = () => {
     if (SIMULATION) {
@@ -41,9 +42,14 @@ module.exports.loop = () => {
 
     DukeMemory.loadState(initCache);
 
-    TheDuke.init(DukeMemory.state);
-    TheDuke.run();
-    TheDuke.end();
+    try {
+        TheDuke.init(DukeMemory.state);
+        TheDuke.run();
+        TheDuke.end();
+    } catch(e) {
+        console.log(e.stack);
+        throw e;
+    }
 
     DukeMemory.saveState();
 

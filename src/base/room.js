@@ -18,6 +18,7 @@ module.exports = class DukeRoom extends DukeObject {
     constructor(memory, api) {
         super(memory, api);
 
+        this.creeps = [];
         this.spawns = [];
         this.controller = false;
         this.others = [];
@@ -25,7 +26,8 @@ module.exports = class DukeRoom extends DukeObject {
         this.tasks = [];
         this.colony = false;
 
-        this.creeps = [];
+
+        this.objectsMap = {};
 
         this._canSpawn = false;
         this._maxSpawnTasks = 0;
@@ -35,6 +37,10 @@ module.exports = class DukeRoom extends DukeObject {
         this.colony = colony;
     }
 
+    getObjectById(id) {
+        return this.objectsMap[id];
+    }
+
     /**
      * accessed via "Reflection"
      * @param creep
@@ -42,6 +48,8 @@ module.exports = class DukeRoom extends DukeObject {
     assignCreeps(creep) {
         creep.room = this;
         this.creeps.push(creep);
+
+        this.objectsMap[creep.id] = creep;
     }
 
     /**
@@ -63,6 +71,8 @@ module.exports = class DukeRoom extends DukeObject {
             default:
                 this.others.push(structure);
         }
+
+        this.objectsMap[structure.id] = structure;
     }
 
     /**
@@ -70,7 +80,7 @@ module.exports = class DukeRoom extends DukeObject {
      * @param task
      */
     assignTasks(task) {
-        task.room = this;
+        task.assignRoom(this)
         this.tasks.push(task);
     }
 
@@ -82,8 +92,8 @@ module.exports = class DukeRoom extends DukeObject {
         this._checkEconomy(); // economy something something.. decide if we need to change strategy
         this._updateTasks(); // prechecks
         this._processTasks(); // spawner
-        this._assignTasks();
-        this._executeTasks();
+        this._assignTasks(); // allocate tasks
+        this._executeTasks(); // run all tasks (or filter)
         this._finalizeTasks();
     }
 
@@ -109,12 +119,15 @@ module.exports = class DukeRoom extends DukeObject {
         // Get factory requirements!!!
         for (let t of this.tasks) {
             let rules = t.rules();
+            // requires creeps
             if (rules.required.creeps) {
+                // check if all requirements are satisfied
                 for (let requirement of rules.required.creeps) {
                     if (requirement.now >= requirement.max) {
                         continue;
                     }
 
+                    // add to spawner queue
                     reqs.creeps.push(requirement.type);
                 }
             }
@@ -129,6 +142,7 @@ module.exports = class DukeRoom extends DukeObject {
 
                     this._maxSpawnTasks--;
                     let creep = reqs.creeps.pop();
+                    // add spawn task
                     TheDuke.addTask(new tasks.spawn_creeps({
                         params: {
                             parts: creep
@@ -137,8 +151,6 @@ module.exports = class DukeRoom extends DukeObject {
                 }
             }
         }
-
-        //
     }
 
     _assignTasks() {
@@ -150,7 +162,18 @@ module.exports = class DukeRoom extends DukeObject {
                         continue;
                     }
 
-                    reqs.creeps.push(requirement.type);
+                    let creep = this.creeps.find(creep => creep.isType(requirement.type));
+                    t.assign(creep);
+                }
+            }
+
+            if(rules.required.spawn) {
+                for (let requirement of rules.required.spawn) {
+                    if (requirement.now >= requirement.max) {
+                        continue;
+                    }
+                    let spawn = this.spawns.find(spawn => spawn.api.spawning == null);
+                    t.assign(spawn)
                 }
             }
         }
@@ -158,10 +181,18 @@ module.exports = class DukeRoom extends DukeObject {
 
     _executeTasks() {
         // TODO: execute all tasks (maybe via priority)
+        for (let t of this.tasks) {
+            console.log("Running task:", t.config().name)
+            t.execute()
+        }
     }
 
     _finalizeTasks() {
         // TODO: dunno what to do here :D (yet)
+        for (let t of this.tasks) {
+            console.log("Finalizing task:", t.config().name)
+            t.finalize()
+        }
     }
 
     find(type) {

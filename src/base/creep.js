@@ -1,12 +1,10 @@
-module.exports = class DukeCreep extends DukeObject {
+module.exports = class DukeCreep extends DukeObjectTaskExecutor {
     constructor(memory, api) {
         super(memory, api);
 
         this.name = memory.name || nanoid();
         this.oRoom = memory.oRoom || false;
         this.room = memory.room || false;
-
-        this.taskMemory = memory.task ? (memory.task.memory || {}) : {};
 
         if(this.isAlive()) {
             // original room created in
@@ -19,17 +17,21 @@ module.exports = class DukeCreep extends DukeObject {
         return !this.api.spawning;
     }
 
-    setTask(task, fromMemory) {
-        this.task = task;
-        this.taskMemory = fromMemory ? this.taskMemory : {};
-    }
 
-    executeTask() {
-        // TODO: implement task execution and notify the task of the status
-    }
+    isType(type) {
+        for(let t of type) {
+            let found = false;
+            for(let part of this.api.body) {
+                if(part.type == t) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found)
+                return false;
+        }
 
-    memorize(result) {
-        this.taskMemory = Object.assign(this.taskMemory, result);
+        return true;
     }
 
     dumpMemory() {
@@ -37,11 +39,7 @@ module.exports = class DukeCreep extends DukeObject {
         return Object.assign(result, {
             name: this.name,
             room: this.room.name,
-            oRoom: this.oRoom,
-            task: {
-                id: this.task.id,
-                memory: this.taskMemory
-            }
+            oRoom: this.oRoom
         });
     }
 
@@ -58,7 +56,7 @@ module.exports = class DukeCreep extends DukeObject {
     moveToTarget(target) {
         if(!this.taskMemory.sourcePath) {
             let source = DukeObject.findById(target);
-            this.taskMemory.sourcePath = source.room.pos.toWorldPosition().findPathToWorldPosition(this.api.pos.toWorldPosition());
+            this.taskMemory.sourcePath = source.pos.toWorldPosition().findPathToWorldPosition(this.api.pos.toWorldPosition());
             console.log("Path to source["+target+"]",this.taskMemory.sourcePath)
         }
         return DukeTask.TASK_CONTINUE;

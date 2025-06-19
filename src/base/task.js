@@ -39,43 +39,59 @@ module.exports = class DukeTask extends DukeObject {
         this.id = memory.id || this.findFreePID();
         this.extraRules = memory.rules || rules;
         this.params = memory.params || {};
+
         // will be changed to room object after task is assigned to room
         /** @type {{name: string}|DukeRoom} */
         this.room = memory.room || room;
-
         this.assigned = memory.assigned || [];
+
+        if (this.id < 0) {
+            throw new Error("Invalid pid! '" + this.id + "'")
+        }
+
+        this.alive = true;
+    }
+
+    assignRoom(room) {
+        this.room = room;
+
         for (let key in this.assigned) {
-            this.assigned[key] = DukeObject.findById(this.assigned[key]);
-            if (!this.assigned[key].isAlive()) {
+            this.assigned[key] = this.room.getObjectById(this.assigned[key]);
+            if (!this.assigned[key] || !this.assigned[key].isAlive()) {
                 delete this.assigned[key];
                 console.log("[Task]", "["+ DukeTask.getTaskName() +"]", key, " died!");
             } else {
                 this.assigned[key].setTask(this, true);
             }
         }
+    }
 
-        if (this.id < 0) {
-            throw new Error("Invalid pid! '" + this.id + "'")
+    assign(obj) {
+        if(obj != null) {
+            obj.setTask(this, false);
+            this.assigned.push(obj);
         }
+    }
 
-        this._finished = false;
-        this.alive = true;
+    execute() {
+        console.log("assigned", this.assigned.length);
+        for(let obj of this.assigned) {
+            obj.executeTask();
+        }
+    }
+
+    finalize() {
+        // override if necessary
     }
 
     rules() {
         return {};
     }
 
+    // override
     isAlive() {
+        console.log("Check if alive", this.alive)
         return this.alive;
-    }
-
-    isDone() {
-        return this._finished;
-    }
-
-    finish() {
-        this._finished = true;
     }
 
     findFreePID() {
@@ -101,7 +117,8 @@ module.exports = class DukeTask extends DukeObject {
         result.room = this.room.id;
         result.rules = this.extraRules;
         result.params = this.params;
-        return Object.assign(result, this.config());
+        result.assigned = this.assigned.map(o => o.id);
+        return Object.assign(this.config(), result);
     }
 };
 

@@ -1,4 +1,4 @@
-module.exports = class DukeStructure extends DukeObject {
+module.exports = class DukeStructure extends DukeObjectTaskExecutor {
     constructor(memory, api) {
         super(memory, api);
 

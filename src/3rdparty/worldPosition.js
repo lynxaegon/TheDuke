@@ -65,6 +65,7 @@ class WorldPosition {
     findPathToWorldPosition(pos, opts) {
         let src = this.toRoomPosition();
         let dst = pos.toRoomPosition();
+        console.log("pathing", src, dst);
         return PathFinder.search(src, dst, opts);
     }
 
@@ -158,7 +159,8 @@ class WorldPosition {
         let {x, y, roomName} = roomPos;
         if (!_.inRange(x, 0, 50)) throw new RangeError('x value ' + x + ' not in range');
         if (!_.inRange(y, 0, 50)) throw new RangeError('y value ' + y + ' not in range');
-        if (roomName == 'sim') throw new RangeError('Sim room does not have world position');
+        // if (roomName == 'sim') throw new RangeError('Sim room does not have world position');
+        if(roomName == 'sim') return new WorldPosition(x, y);
         let [name, h, wx, v, wy] = roomName.match(/^([WE])([0-9]+)([NS])([0-9]+)$/);
         if (h == 'W') x = ~x;
         if (v == 'N') y = ~y;
