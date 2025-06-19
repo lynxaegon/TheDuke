@@ -31,7 +31,7 @@ module.exports = class Colony {
     announceDead(creeps, structures, rooms) {
          console.log("Creeps Died:", creeps.length);
          console.log("Structures Died:", structures.length);
-         console.log("Rooms Died:", rooms.length);
+         console.log("Rooms Died:", Object.values(rooms).length);
     }
 
     run() {

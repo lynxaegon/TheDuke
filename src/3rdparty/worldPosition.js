@@ -65,7 +65,10 @@ class WorldPosition {
     findPathToWorldPosition(pos, opts) {
         let src = this.toRoomPosition();
         let dst = pos.toRoomPosition();
-        console.log("pathing", src, dst);
+
+        src.roomName = "sim";
+        dst.roomName = "sim";
+
         return PathFinder.search(src, dst, opts);
     }
 

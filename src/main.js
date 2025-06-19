@@ -6,44 +6,47 @@ screeps.space - The Duke (testing phase)
 
 require('version');
 
-const injectLogger = require('utils.logger');
-const initCache = require("utils.cache");
+// utils
+const injectLogger = require('utils/logger');
+global.nanoid = require('utils/nanoid');
 
-global._ = require('lodash');
-global.DukeMemory = require('utils.memory');
-global.DukeObject = require('utils.DukeObject');
-global.DukeObjectTaskExecutor = require('utils.DukeObjectTaskExecutor');
-global.nanoid = require('utils.nanoid');
+// The Duke Requirements
+const InitCache = require('utils/cache');
 
+global.WorldPosition = require("3rdparty/worldPosition");
+global.DukeMemory = require('utils/memory');
+global.DukeObject = require('utils/DukeObject');
+global.DukeObjectTaskExecutor = require('utils/DukeObjectTaskExecutor');
+global.DukeColony = require('base/colony');
+global.DukeTask = require('base/task');
+global.DukeCreep = require("base/creep");
+global.DukeStructure = require("base/structure");
+global.DukeRoom = require("base/room");
+
+// The Duke
+global.TheDuke = new (require("TheDuke"))();
 
 let SIMULATION = false;
 if (global.navigator) {
     SIMULATION = true;
 }
 
-if (!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
-    Memory.SCRIPT_VERSION = SCRIPT_VERSION;
-    console.log('New code version: ', SCRIPT_VERSION);
-}
-
-const _TheDuke = require('TheDuke');
-
 module.exports.loop = () => {
+    injectLogger();
     if (SIMULATION) {
         Game.cpu.limit = 20;
         Game.cpu.tickLimit = 500;
         Game.cpu.bucket = 1000;
     }
 
-    injectLogger();
     console.log("--===---------- Loop " + Game.time + " Started ----------===--");
 
-    global.TheDuke = new _TheDuke();
-
-    DukeMemory.loadState(initCache);
+    DukeMemory.loadState();
+    global.Mem = DukeMemory.state;
+    global.Cache = InitCache(DukeMemory.state.cache);
 
     try {
-        TheDuke.init(DukeMemory.state);
+        TheDuke.init();
         TheDuke.run();
         TheDuke.end();
     } catch(e) {
@@ -52,6 +55,8 @@ module.exports.loop = () => {
     }
 
     DukeMemory.saveState();
+
+    DukeMemory.clearData();
 
     if (typeof Game.cpu.getHeapStatistics === "function") {
         let heapStats = Game.cpu.getHeapStatistics();

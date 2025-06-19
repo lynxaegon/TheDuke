@@ -10,11 +10,11 @@ let tasks = {
     harvest: DukeColony.getTasks()['BASIC_HARVEST']['BasicHarvest'],
     spawn_creeps: DukeColony.getTasks()['FACTORY']['SpawnCreep']
 };
-// const STATES = {};
-
-// STATES[Colony.STATE_] = {};
 
 module.exports = class DukeRoom extends DukeObject {
+    static FIND_TYPE = {
+        ENERGY_SOURCE: 1
+    };
     constructor(memory, api) {
         super(memory, api);
 
@@ -25,7 +25,6 @@ module.exports = class DukeRoom extends DukeObject {
         /** @type {DukeTask[]} **/
         this.tasks = [];
         this.colony = false;
-
 
         this.objectsMap = {};
 
@@ -254,8 +253,4 @@ module.exports = class DukeRoom extends DukeObject {
         let sources = this.find(DukeRoom.FIND_TYPE.ENERGY_SOURCE);
         return 2 * sources.length;
     }
-};
-
-module.exports.FIND_TYPE = {
-    ENERGY_SOURCE: 1
 };

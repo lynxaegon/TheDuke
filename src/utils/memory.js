@@ -5,38 +5,46 @@ let HEAP = false;
 // minor optimization atm (0.03 cpu)
 let FEATURE_ENABLED__USE_HEAP_IF_POSSIBLE = false;
 
-let TICK_FLAGS = {};
+let TICK_FLAGS = {
+    clearCache: false,
+    clearMemory: false
+};
 
 class DukeMemory {
     constructor() {
         this.state = {};
     }
 
-    loadState(initCache) {
+    loadState() {
         if(FEATURE_ENABLED__USE_HEAP_IF_POSSIBLE){
             if(!HEAP) {
                 console.log(" ==== HEAP CLEARED ==== ");
-                this.__loadState(initCache);
+                this.__loadState();
             } else {
                 console.log(" ==== USING HEAP ==== ");
             }
         }
         else {
             console.log(" ==== HEAP FEATURE DISABLED ==== ");
-            this.__loadState(initCache);
+            this.__loadState();
         }
     }
 
-    __loadState(initCache) {
-        // noinspection JSAnnotator
+    __loadState() {
         delete global.Memory;
         this.state = RawMemory.get();
         this.state = JSON.parse(this.state);
 
         if (!this.state._ || this.state._ > DBVersion) {
             // first time we init the memory
-            RawMemory.set('');
+            RawMemory.set('{}');
             this.state = {};
+        }
+
+        if(TICK_FLAGS.clearMemory) {
+            this.state = {};
+            delete TICK_FLAGS.clearMemory;
+            console.log("======= memory cleared!");
         }
 
         if (!this.state._ || this.state._ < DBVersion) {
@@ -56,7 +64,6 @@ class DukeMemory {
             console.log("======= cache cleared!");
         }
 
-        global.Cache = initCache(this.state.cache);
         HEAP = true;
     }
 
@@ -91,6 +98,10 @@ class DukeMemory {
 
     clearCache() {
         TICK_FLAGS.clearCache = true;
+    }
+
+    clearData() {
+        TICK_FLAGS.clearMemory = true;
     }
 }
 

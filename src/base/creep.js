@@ -56,9 +56,12 @@ module.exports = class DukeCreep extends DukeObjectTaskExecutor {
     moveToTarget(target) {
         if(!this.taskMemory.sourcePath) {
             let source = DukeObject.findById(target);
+            if(!source) {
+
+            }
             this.taskMemory.sourcePath = source.pos.toWorldPosition().findPathToWorldPosition(this.api.pos.toWorldPosition());
-            console.log("Path to source["+target+"]",this.taskMemory.sourcePath)
         }
+        console.log("Path to source["+target+"]", JSON.stringify(this.taskMemory.sourcePath));
         return DukeTask.TASK_CONTINUE;
     }
 };

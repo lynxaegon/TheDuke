@@ -1,42 +1,9 @@
-global.WorldPosition = require("3rdparty.worldPosition");
-
-global.DukeColony = require('base.colony');
-global.DukeTask = require('base.task');
-global.DukeCreep = require("base.creep");
-global.DukeStructure = require("base.structure");
-global.DukeRoom = require("base.room");
-
-class DukeTaskFactory {
-    constructor(memory, api) {
-        let taskName = memory.name;
-        let taskType = memory.type;
-
-        let taskCls = DukeColony.getTasks();
-        if (!taskCls[taskType]) {
-            taskCls = new DukeTask(memory, false);
-            taskCls.alive = false;
-            console.log("Invalid task", taskType);
-            return taskCls;
-        }
-        if (!taskCls[taskType][taskName]) {
-            console.log("Invalid task", taskType, taskName);
-            taskCls = new DukeTask(memory, false);
-            taskCls.alive = false;
-            return taskCls;
-        }
-
-        // taskCls = new DukeTask(memory, false);
-        // taskCls.alive = false;
-        // return taskCls;
-
-        return new (DukeColony.getTasks()[taskType][taskName])(memory, api);
-    }
-}
-
 class TheDuke {
-    init(memory) {
-        this.memory = memory;
-        // deserialize Memory to Objects
+    init() {
+        if (!Mem._v || Mem._v != SCRIPT_VERSION) {
+            Mem._v = SCRIPT_VERSION;
+            console.log('New code version: ', SCRIPT_VERSION);
+        }
 
         this.structure = {
             creeps: {
@@ -68,8 +35,8 @@ class TheDuke {
                 loader: "rooms",
                 cls: DukeRoom,
                 memory: "rooms",
-                alive: [],
-                dead: []
+                alive: {},
+                dead: {}
             }
         };
 
@@ -99,18 +66,58 @@ class TheDuke {
         );
     }
 
-    loadRooms(structure) {
-        let rooms = this.structure.rooms;
-        const createRoom = (name, alive) => {
-            let room = new structure.cls(
+    loadFromGame(structure) {
+        for (let name in Game[structure.memory]) {
+            let id = Game[structure.memory][name][structure.id];
+            let memoryId = DukeMemory.encodeId(Game[structure.memory][name][structure.id]);
+            let obj = new structure.cls(
                 Object.assign({
-                        id: name
+                        id: id
                     },
-                    this.memory[structure.memory][name]
+                    Mem[structure.memory][memoryId]
                 ),
                 Game[structure.memory][name]
             );
-            rooms[alive ? "alive" : "dead"][name] = room;
+            if (obj.isAlive()) {
+                structure.alive.push(obj);
+            } else {
+                structure.dead.push(obj);
+            }
+        }
+    }
+
+    loadFromMemory(structure) {
+        for (let name in Mem[structure.memory]) {
+            let id = Mem[structure.memory][name][structure.id];
+            let memoryId = DukeMemory.encodeId(Mem[structure.memory][name][structure.id]);
+            let obj = new structure.cls(
+                Object.assign({
+                        id: id
+                    },
+                    Mem[structure.memory][memoryId]
+                ),
+                false
+            );
+            if (obj.isAlive()) {
+                structure.alive.push(obj);
+            } else {
+                structure.dead.push(obj);
+            }
+        }
+    }
+
+    loadRooms(structure) {
+        let rooms = this.structure.rooms;
+        const createRoom = (name, alive) => {
+            rooms[alive ? "alive" : "dead"][name] = new structure.cls(
+                Object.assign({
+                        id: name
+                    },
+                    Mem[structure.memory][name]
+                ),
+                Game[structure.memory][name]
+            );
+            console.log("creating room " + name);
         };
 
         ["creeps", "structures", "tasks"].map(key => {
@@ -126,46 +133,6 @@ class TheDuke {
                 }
             });
         });
-    }
-
-    loadFromGame(structure) {
-        for (let name in Game[structure.memory]) {
-            let id = Game[structure.memory][name][structure.id];
-            let memoryId = DukeMemory.encodeId(Game[structure.memory][name][structure.id]);
-            let obj = new structure.cls(
-                Object.assign({
-                        id: id
-                    },
-                    this.memory[structure.memory][memoryId]
-                ),
-                Game[structure.memory][name]
-            );
-            if (obj.isAlive()) {
-                structure.alive.push(obj);
-            } else {
-                structure.dead.push(obj);
-            }
-        }
-    }
-
-    loadFromMemory(structure) {
-        for (let name in this.memory[structure.memory]) {
-            let id = this.memory[structure.memory][name][structure.id];
-            let memoryId = DukeMemory.encodeId(this.memory[structure.memory][name][structure.id]);
-            let obj = new structure.cls(
-                Object.assign({
-                        id: id
-                    },
-                    this.memory[structure.memory][memoryId]
-                ),
-                false
-            );
-            if (obj.isAlive()) {
-                structure.alive.push(obj);
-            } else {
-                structure.dead.push(obj);
-            }
-        }
     }
 
     addTask(task) {
@@ -187,16 +154,38 @@ class TheDuke {
         for (let key in this.structure) {
             for (let i in this.structure[key].alive) {
                 let obj = this.structure[key];
-                this.memory[obj.memory][obj.alive[i].id] = obj.alive[i].dumpMemory();
+                Mem[obj.memory][obj.alive[i].id] = obj.alive[i].dumpMemory();
             }
 
             for (let i in this.structure[key].dead) {
                 let obj = this.structure[key];
-                delete this.memory[obj.memory][obj.dead[i].id];
+                delete Mem[obj.memory][obj.dead[i].id];
             }
         }
     }
+}
 
+class DukeTaskFactory {
+    constructor(memory, api) {
+        let taskName = memory.name;
+        let taskType = memory.type;
+
+        let taskCls = DukeColony.getTasks();
+        if (!taskCls[taskType]) {
+            taskCls = new DukeTask(memory, false);
+            taskCls.alive = false;
+            console.log("Invalid task", taskType);
+            return taskCls;
+        }
+        if (!taskCls[taskType][taskName]) {
+            console.log("Invalid task", taskType, taskName);
+            taskCls = new DukeTask(memory, false);
+            taskCls.alive = false;
+            return taskCls;
+        }
+
+        return new (DukeColony.getTasks()[taskType][taskName])(memory, api);
+    }
 }
 
 module.exports = TheDuke;
